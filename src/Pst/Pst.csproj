@@ -46,6 +46,7 @@
     <Compile Include="Internal\Crc32.cs" />
     <Compile Include="Internal\Ndb\PageTrailer.cs" />
     <Compile Include="Internal\PageType.cs" />
+    <Compile Include="Internal\Permute.cs" />
     <Compile Include="Internal\PstReader.cs" />
     <Compile Include="Internal\Validate.cs" />
     <Compile Include="MessageStore.cs" />
