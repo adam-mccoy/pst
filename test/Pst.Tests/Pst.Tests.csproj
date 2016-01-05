@@ -37,12 +37,15 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BTreeReaderTests.cs" />
     <Compile Include="Crc32Tests.cs" />
     <Compile Include="PermuteTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <EmbeddedResource Include="TestData\nbt.bin" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Pst\Pst.csproj">
