@@ -43,6 +43,7 @@
     <Compile Include="Extensions\ByteArrayExtensions.cs" />
     <Compile Include="Folder.cs" />
     <Compile Include="Internal\Ndb\BbtEntry.cs" />
+    <Compile Include="Internal\Ndb\Block.cs" />
     <Compile Include="Internal\Ndb\Bref.cs" />
     <Compile Include="Internal\Ndb\BTreeNode.cs" />
     <Compile Include="Internal\Ndb\BTreeReader.cs" />

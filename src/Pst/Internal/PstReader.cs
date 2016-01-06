@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
 using Pst.Extensions;
+using Pst.Internal.Ndb;
 
 namespace Pst.Internal
 {
     internal class PstReader
     {
+        private const int RootOffset = 180;
+
         private static readonly byte[] MagicBytes = new byte[] { 0x21, 0x42, 0x44, 0x4e };
         private static readonly byte[] MagicClientBytes = new byte[] { 0x53, 0x4d };
         private static readonly ushort[] SupportedVersions = new ushort[] { 14, 15, 23 };
@@ -15,6 +18,8 @@ namespace Pst.Internal
 
         private readonly Stream _input;
         private ushort _fileVersion;
+        private BTreeReader<BbtEntry> _bbtReader;
+        private BTreeReader<NbtEntry> _nbtReader;
 
         internal PstReader(Stream input)
         {
@@ -33,7 +38,30 @@ namespace Pst.Internal
             get { return _input; }
         }
 
-        internal void VerifyHeader()
+        internal Block ReadBlock(ulong bid)
+        {
+            var entry = _bbtReader.Find(bid);
+            if (entry == null)
+                return null;
+
+            var blockSize = 64 * ((entry.Length + 64) / 64);
+            var block = new byte[blockSize];
+            _input.Seek((long)entry.Bref.Ib, SeekOrigin.Begin);
+            ReadBytes(block, 0, blockSize);
+
+            return Block.Create(block);
+        }
+
+        internal Block ReadBlock(uint nid)
+        {
+            var entry = _nbtReader.Find(nid);
+            if (entry == null)
+                return null;
+
+            return ReadBlock(entry.DataBid);
+        }
+
+        private void VerifyHeader()
         {
             var buffer = new byte[UnicodeHeaderLength];
             ReadBytes(buffer, 0, 28);
@@ -44,6 +72,16 @@ namespace Pst.Internal
             ReadBytes(buffer, 28, (IsAnsi ? AnsiHeaderLength : UnicodeHeaderLength) - 28);
             var crcPartial = BitConverter.ToUInt32(buffer, 4);
             Validate.Match(crcPartial, Crc32.Calculate(buffer.Segment(8, 471)), "Partial CRC invalid.");
+
+            var nbt = new Bref(
+                BitConverter.ToUInt64(buffer, RootOffset + 36),
+                BitConverter.ToUInt64(buffer, RootOffset + 44));
+            var bbt = new Bref(
+                BitConverter.ToUInt64(buffer, RootOffset + 52),
+                BitConverter.ToUInt64(buffer, RootOffset + 60));
+
+            _nbtReader = new BTreeReader<NbtEntry>(_input, (long)nbt.Ib);
+            _bbtReader = new BTreeReader<BbtEntry>(_input, (long)bbt.Ib);
         }
 
         private void ReadBytes(byte[] buffer, int offset, int count)
