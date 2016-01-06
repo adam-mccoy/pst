@@ -39,7 +39,7 @@ namespace Pst.Internal
             ReadBytes(buffer, 0, 28);
             Validate.Match(buffer.Segment(0, 4), MagicBytes, "Magic value invalid.");
             Validate.Match(buffer.Segment(8, 2), MagicClientBytes, "Magic client value invalid.");
-            _fileVersion = BitConverter.ToUInt16(buffer, 4);
+            _fileVersion = BitConverter.ToUInt16(buffer, 10);
             Validate.Any(_fileVersion, SupportedVersions, "Found unsupported version.");
             ReadBytes(buffer, 28, (IsAnsi ? AnsiHeaderLength : UnicodeHeaderLength) - 28);
             var crcPartial = BitConverter.ToUInt32(buffer, 4);
