@@ -31,5 +31,30 @@ namespace Pst.Tests
 
             Assert.IsNull(node);
         }
+
+        [Test]
+        public void Finds_BBT_Node()
+        {
+            var stream = TestHelper.GetTestDataStream("bbt.bin");
+            var reader = new BTreeReader<BbtEntry>(stream, 0);
+
+            var node = reader.Find(3);
+
+            Assert.IsNotNull(node);
+            Assert.AreEqual(new Bref(3, 0xffee), node.Bref);
+            Assert.AreEqual(0x100, node.Length);
+            Assert.AreEqual(1, node.RefCount);
+        }
+
+        [Test]
+        public void Nonexistent_BBT_Node_Returns_Null()
+        {
+            var stream = TestHelper.GetTestDataStream("bbt.bin");
+            var reader = new BTreeReader<BbtEntry>(stream, 0);
+
+            var node = reader.Find(6);
+
+            Assert.IsNull(node);
+        }
     }
 }

@@ -46,6 +46,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <EmbeddedResource Include="TestData\nbt.bin" />
+    <EmbeddedResource Include="TestData\bbt.bin" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Pst\Pst.csproj">
