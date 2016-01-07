@@ -48,6 +48,7 @@
     <Compile Include="Internal\Ndb\BTreeNode.cs" />
     <Compile Include="Internal\Ndb\BTreeReader.cs" />
     <Compile Include="Internal\Crc32.cs" />
+    <Compile Include="Internal\Ndb\CryptMethod.cs" />
     <Compile Include="Internal\Ndb\NbtEntry.cs" />
     <Compile Include="Internal\Ndb\PageTrailer.cs" />
     <Compile Include="Internal\PageType.cs" />

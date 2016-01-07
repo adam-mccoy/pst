@@ -8,6 +8,7 @@ namespace Pst.Internal
     internal class PstReader
     {
         private const int RootOffset = 180;
+        private const int CryptMethodOffset = 0x201;
 
         private static readonly byte[] MagicBytes = new byte[] { 0x21, 0x42, 0x44, 0x4e };
         private static readonly byte[] MagicClientBytes = new byte[] { 0x53, 0x4d };
@@ -18,6 +19,7 @@ namespace Pst.Internal
 
         private readonly Stream _input;
         private ushort _fileVersion;
+        private CryptMethod _cryptMethod;
         private BTreeReader<BbtEntry> _bbtReader;
         private BTreeReader<NbtEntry> _nbtReader;
 
@@ -49,7 +51,12 @@ namespace Pst.Internal
             _input.Seek((long)entry.Bref.Ib, SeekOrigin.Begin);
             ReadBytes(block, 0, blockSize);
 
-            return Block.Create(block);
+            var result = Block.Create(block);
+
+            if (_cryptMethod != CryptMethod.None)
+                DecryptBlock(block, result.Bid);
+
+            return result;
         }
 
         internal Block ReadBlock(uint nid)
@@ -82,6 +89,22 @@ namespace Pst.Internal
 
             _nbtReader = new BTreeReader<NbtEntry>(_input, (long)nbt.Ib);
             _bbtReader = new BTreeReader<BbtEntry>(_input, (long)bbt.Ib);
+
+            _cryptMethod = (CryptMethod)buffer[CryptMethodOffset];
+        }
+
+        private void DecryptBlock(byte[] block, ulong bid)
+        {
+            switch (_cryptMethod)
+            {
+                case CryptMethod.Permute:
+                    Crypt.CryptPermute(block, false);
+                    break;
+
+                case CryptMethod.Cyclic:
+                    Crypt.CryptCyclic(block, (uint)bid);
+                    break;
+            }
         }
 
         private void ReadBytes(byte[] buffer, int offset, int count)
