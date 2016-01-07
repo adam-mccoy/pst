@@ -4,7 +4,7 @@ using Pst.Internal;
 namespace Pst.Tests
 {
     [TestFixture]
-    public class PermuteTests
+    public class CryptTests
     {
         [Test]
         public void Permute_Encrypts()
@@ -18,7 +18,7 @@ namespace Pst.Tests
                 0x36, 0x13, 0x62, 0xa8, 0x21
             };
 
-            Permute.CryptPermute(input, true);
+            Crypt.CryptPermute(input, true);
 
             CollectionAssert.AreEqual(expected, input);
         }
@@ -35,7 +35,7 @@ namespace Pst.Tests
                 0x01, 0x02, 0x03, 0x04, 0x05
             };
 
-            Permute.CryptPermute(input, false);
+            Crypt.CryptPermute(input, false);
 
             CollectionAssert.AreEqual(expected, input);
         }

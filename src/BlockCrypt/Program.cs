@@ -18,7 +18,11 @@ namespace BlockCrypt
             switch (_options.Method)
             {
                 case "permute":
-                    Permute.CryptPermute(data, _options.Mode == "encrypt");
+                    Crypt.CryptPermute(data, _options.Mode == "encrypt");
+                    break;
+
+                case "cyclic":
+                    Crypt.CryptCyclic(data, (uint)_options.BlockId);
                     break;
             }
 
@@ -30,6 +34,7 @@ namespace BlockCrypt
             string filePath = null,
                    method = null,
                    mode = null;
+            ulong blockId = 0;
 
             var keys = args.Where(s => s.StartsWith("-")).Select(s => new { Key = s.Substring(1), Index = Array.IndexOf(args, s) });
             foreach (var k in keys)
@@ -47,22 +52,28 @@ namespace BlockCrypt
                     case "d":
                         mode = args[k.Index + 1];
                         break;
+
+                    case "b":
+                        blockId = ulong.Parse(args[k.Index + 1]);
+                        break;
                 }
             }
-            _options = new Options(filePath, method, mode);
+            _options = new Options(filePath, method, mode, blockId);
         }
 
         private class Options
         {
-            public Options(string filePath, string method, string mode)
+            public Options(string filePath, string method, string mode, ulong blockId)
             {
                 FilePath = filePath;
                 Method = method;
+                BlockId = blockId;
             }
 
             public string FilePath { get; private set; }
             public string Method { get; private set; }
             public string Mode { get; private set; }
+            public ulong BlockId { get; private set; }
         }
     }
 }

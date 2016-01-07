@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using Pst.Extensions;
 
 namespace Pst.Internal
 {
-    internal static class Permute
+    internal static class Crypt
     {
+        private const int R = 0;
+        private const int S = 256;
+        private const int I = 512;
+
         private static readonly byte[] _cryptTable =
         {
             65, 54, 19, 98, 168, 33, 110, 187,
@@ -112,10 +117,34 @@ namespace Pst.Internal
 
         internal static void CryptPermute(ArraySegment<byte> data, bool encrypt)
         {
-            var tableOffset = encrypt ? 0 : 512;
+            var tableOffset = encrypt ? R : I;
             for (int i = 0, j = data.Offset; i < data.Count; i++, j++)
             {
                 data.Array[j] = _cryptTable[tableOffset + data.Array[j]];
+            }
+        }
+
+        internal static void CryptCyclic(byte[] data, uint key)
+        {
+            CryptCyclic(data.Segment(0, data.Length), key);
+        }
+
+        internal static void CryptCyclic(ArraySegment<byte> data, uint key)
+        {
+            ushort w = (ushort)(key ^ (key >> 16));
+            var list = data as IList<byte>;
+            for (int i = 0; i < data.Count; i++)
+            {
+                var b = list[i];
+                b = (byte)(b + w);
+                b = _cryptTable[R + b];
+                b = (byte)(b + (byte)(w >> 8));
+                b = _cryptTable[S + b];
+                b = (byte)(b - (byte)(w >> 8));
+                b = _cryptTable[I + b];
+                b = (byte)(b - w);
+                list[i] = b;
+                w++;
             }
         }
     }
