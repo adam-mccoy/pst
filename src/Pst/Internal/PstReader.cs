@@ -52,9 +52,10 @@ namespace Pst.Internal
             ReadBytes(block, 0, blockSize);
 
             var result = Block.Create(block);
+            Validate.Match(result.Crc, Crc32.Calculate(result.Data.Segment(0, result.Length)), "Block CRC doesn't match.");
 
             if (_cryptMethod != CryptMethod.None)
-                DecryptBlock(block, result.Bid);
+                DecryptBlock(result.Data, result.Bid);
 
             return result;
         }

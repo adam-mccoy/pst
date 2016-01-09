@@ -28,8 +28,6 @@ namespace Pst.Internal.Ndb
             var crc = BitConverter.ToUInt32(data, blockSize - 12);
             var bid = BitConverter.ToUInt64(data, blockSize - 8);
 
-            Validate.Match(crc, Crc32.Calculate(data.Segment(0, dataSize)), "Block CRC doesn't match.");
-
             var blockData = new byte[dataSize];
             Buffer.BlockCopy(data, 0, blockData, 0, dataSize);
 
