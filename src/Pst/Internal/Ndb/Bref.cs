@@ -11,6 +11,11 @@
         internal ulong Bid { get; private set; }
         internal ulong Ib { get; private set; }
 
+        public override int GetHashCode()
+        {
+            return 17 ^ (int)Bid ^ (int)Ib;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == this) return true;
