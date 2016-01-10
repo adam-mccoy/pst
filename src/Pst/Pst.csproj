@@ -44,6 +44,8 @@
     <Compile Include="Folder.cs" />
     <Compile Include="Internal\Ltp\BTree.cs" />
     <Compile Include="Internal\Ltp\Heap.cs" />
+    <Compile Include="Internal\Ltp\Property.cs" />
+    <Compile Include="Internal\Ltp\PropertyContext.cs" />
     <Compile Include="Internal\Ndb\BbtEntry.cs" />
     <Compile Include="Internal\Ndb\Block.cs" />
     <Compile Include="Internal\Ndb\Bref.cs" />
