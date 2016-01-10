@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BTreeReaderTests.cs" />
+    <Compile Include="BTreeTests.cs" />
     <Compile Include="Crc32Tests.cs" />
     <Compile Include="CryptTests.cs" />
     <Compile Include="HeapTests.cs" />
