@@ -100,7 +100,8 @@ namespace Pst.Tests
             var input = TestHelper.GetTestDataStream("test.pst");
             var reader = new PstReader(input);
 
-            var block = reader.ReadBlock(0x21);
+            var node = reader.FindNode(0x21);
+            var block = reader.ReadBlock(node.DataBid);
 
             Assert.IsNotNull(block);
             Assert.AreEqual(0x1c6, block.Length);

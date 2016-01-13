@@ -25,7 +25,7 @@ namespace Pst
                 if (!_isOpen)
                     throw new InvalidOperationException("File is not open.");
 
-                return new MessageStore(_pstReader);
+                return new MessageStore(0x21, _pstReader);
             }
         }
     }

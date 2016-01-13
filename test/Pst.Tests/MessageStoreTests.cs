@@ -12,7 +12,7 @@ namespace Pst.Tests
             var stream = TestHelper.GetTestDataStream("test.pst");
             var reader = new PstReader(stream);
 
-            var messageStore = new MessageStore(reader);
+            var messageStore = new MessageStore(0x21, reader);
 
             Assert.AreEqual("Outlook Data File", messageStore.DisplayName);
         }
@@ -28,7 +28,7 @@ namespace Pst.Tests
             var stream = TestHelper.GetTestDataStream("test.pst");
             var reader = new PstReader(stream);
 
-            var messageStore = new MessageStore(reader);
+            var messageStore = new MessageStore(0x21, reader);
 
             CollectionAssert.AreEqual(expectedBytes, messageStore.RecordKey);
         }

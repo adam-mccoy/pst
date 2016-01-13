@@ -1,5 +1,6 @@
 ﻿using Pst.Internal;
 using Pst.Internal.Ltp;
+using Pst.Internal.Ndb;
 using System.Linq;
 using System.Text;
 
@@ -7,11 +8,13 @@ namespace Pst
 {
     public class MessageStore
     {
+        private readonly Node _node;
         private readonly PropertyContext _context;
 
-        internal MessageStore(PstReader reader)
+        internal MessageStore(uint nid, PstReader reader)
         {
-            var block = reader.ReadBlock(0x21);
+            _node = reader.FindNode(nid);
+            var block = reader.ReadBlock(_node.DataBid);
             _context = new PropertyContext(block, reader);
         }
 

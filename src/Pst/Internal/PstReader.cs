@@ -60,13 +60,13 @@ namespace Pst.Internal
             return result;
         }
 
-        internal Block ReadBlock(uint nid)
+        internal Node FindNode(uint nid)
         {
             var entry = _nbtReader.Find(nid);
             if (entry == null)
                 return null;
 
-            return ReadBlock(entry.DataBid);
+            return new Node(entry.Nid, entry.DataBid, entry.SubnodeBid);
         }
 
         private void VerifyHeader()
