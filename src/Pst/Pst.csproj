@@ -61,6 +61,7 @@
     <Compile Include="Internal\Validate.cs" />
     <Compile Include="MessageStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyKey.cs" />
     <Compile Include="PstFile.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -23,9 +23,9 @@ namespace Pst.Internal.Ltp
                 CreateProperty);
         }
 
-        internal IList<byte> Get(ushort key)
+        internal IList<byte> Get(PropertyKey key)
         {
-            var prop = _bTree.Find(key);
+            var prop = _bTree.Find((ushort)key);
             if (prop == null)
                 return null;
 
