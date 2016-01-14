@@ -1,5 +1,4 @@
 ﻿using System;
-using Pst.Extensions;
 
 namespace Pst.Internal.Ndb
 {

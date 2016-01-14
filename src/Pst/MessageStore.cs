@@ -11,7 +11,7 @@ namespace Pst
         private readonly Node _node;
         private readonly PropertyContext _context;
 
-        internal MessageStore(uint nid, PstReader reader)
+        internal MessageStore(Nid nid, PstReader reader)
         {
             _node = reader.FindNode(nid);
             var block = reader.ReadBlock(_node.DataBid);

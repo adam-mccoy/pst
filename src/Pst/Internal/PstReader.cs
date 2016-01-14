@@ -60,7 +60,7 @@ namespace Pst.Internal
             return result;
         }
 
-        internal Node FindNode(uint nid)
+        internal Node FindNode(Nid nid)
         {
             var entry = _nbtReader.Find(nid);
             if (entry == null)

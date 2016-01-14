@@ -15,10 +15,10 @@ namespace Pst.Tests
             var node = reader.Find(3);
 
             Assert.IsNotNull(node);
-            Assert.AreEqual(3, node.Nid);
+            Assert.AreEqual(3u, (uint)node.Nid);
             Assert.AreEqual(0xffee, node.DataBid);
             Assert.AreEqual(0, node.SubnodeBid);
-            Assert.AreEqual(0, node.ParentNid);
+            Assert.AreEqual(0, (uint)node.ParentNid);
         }
 
         [Test]
