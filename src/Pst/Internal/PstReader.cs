@@ -40,7 +40,7 @@ namespace Pst.Internal
             get { return _input; }
         }
 
-        internal Block ReadBlock(ulong bid)
+        internal Block FindBlock(ulong bid)
         {
             var entry = _bbtReader.Find(bid);
             if (entry == null)
