@@ -7,20 +7,18 @@ namespace Pst.Internal.Ltp
 {
     internal class PropertyContext
     {
+        private readonly Node _node;
         private Heap _heap;
         private BTree<Property, ushort> _bTree;
         private IPstReader _pstReader;
 
         internal PropertyContext(
-            Block block,
+            Node node,
             IPstReader reader)
         {
-            _heap = new Heap(block);
+            _node = node;
             _pstReader = reader;
-            _bTree = new BTree<Property, ushort>(
-                _heap,
-                b => BitConverter.ToUInt16(b.ToArray(), 0),
-                CreateProperty);
+            Initialize();
         }
 
         internal IList<byte> Get(PropertyKey key)
@@ -29,10 +27,27 @@ namespace Pst.Internal.Ltp
             if (prop == null)
                 return null;
 
-            if ((prop.Hnid & 0x1f) == 0)
-                return _heap[prop.Hnid];
+            if (prop.Type.IsVariableLength())
+            {
+                if ((prop.Hnid & 0x1f) == 0)
+                    return _heap[prop.Hnid];
+                return _pstReader.FindBlock(prop.Hnid).Data;
+            }
 
-            return _pstReader.ReadBlock(prop.Hnid).Data;
+            if (prop.Type.GetLength() <= 4)
+                return BitConverter.GetBytes(prop.Hnid).ToList();
+
+            return _heap[prop.Hnid];
+        }
+
+        private void Initialize()
+        {
+            var block = _pstReader.FindBlock(_node.DataBid);
+            _heap = new Heap(block);
+            _bTree = new BTree<Property, ushort>(
+                _heap,
+                b => BitConverter.ToUInt16(b.ToArray(), 0),
+                CreateProperty);
         }
 
         private Property CreateProperty(IList<byte> bytes)
@@ -40,8 +55,8 @@ namespace Pst.Internal.Ltp
             var buffer = bytes.ToArray();
             return new Property
             {
-                Key = BitConverter.ToUInt16(buffer, 0),
-                Type = BitConverter.ToUInt16(buffer, 2),
+                Key = (PropertyKey)BitConverter.ToUInt16(buffer, 0),
+                Type = (PropertyType)BitConverter.ToUInt16(buffer, 2),
                 Hnid = BitConverter.ToUInt32(buffer, 4)
             };
         }

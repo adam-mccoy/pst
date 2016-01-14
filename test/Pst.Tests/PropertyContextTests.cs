@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using Moq;
+using NUnit.Framework;
+using Pst.Internal;
 using Pst.Internal.Ltp;
 using Pst.Internal.Ndb;
 
@@ -51,9 +53,12 @@ namespace Pst.Tests
                 0x97, 0x7b, 0x45, 0xcb, 0xdb, 0xc2, 0x82, 0x43,
                 0x92, 0x10, 0x55, 0x19, 0xe9, 0x93, 0x28, 0xfa
             };
+            var reader = new Mock<IPstReader>();
+            reader.Setup(r => r.FindBlock(0x1234))
+                .Returns(Block.Create(_heapData));
 
-            var block = Block.Create(_heapData);
-            var pc = new PropertyContext(block, null);
+            var node = new Node(0x21, 0x1234, 0x5678);
+            var pc = new PropertyContext(node, reader.Object);
 
             var result = pc.Get(PropertyKey.RecordKey);
 

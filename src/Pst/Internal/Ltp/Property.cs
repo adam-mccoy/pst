@@ -2,8 +2,8 @@
 {
     internal class Property
     {
-        internal ushort Key { get; set; }
-        internal ushort Type { get; set; }
+        internal PropertyKey Key { get; set; }
+        internal PropertyType Type { get; set; }
         internal uint Hnid { get; set; }
     }
 }

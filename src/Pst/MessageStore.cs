@@ -8,14 +8,16 @@ namespace Pst
 {
     public class MessageStore
     {
-        private readonly Node _node;
-        private readonly PropertyContext _context;
+        private readonly IPstReader _pstReader;
+        private Nid _nid;
+        private Node _node;
+        private PropertyContext _context;
 
         internal MessageStore(Nid nid, IPstReader reader)
         {
-            _node = reader.FindNode(nid);
-            var block = reader.ReadBlock(_node.DataBid);
-            _context = new PropertyContext(block, reader);
+            _nid = nid;
+            _pstReader = reader;
+            Initialize();
         }
 
         public byte[] RecordKey
@@ -35,5 +37,11 @@ namespace Pst
         public Folder RootFolder { get; set; }
         public Folder SearchFolder { get; set; }
         public Folder RecycleBin { get; set; }
+
+        private void Initialize()
+        {
+            _node = _pstReader.FindNode(_nid);
+            _context = new PropertyContext(_node, _pstReader);
+        }
     }
 }
