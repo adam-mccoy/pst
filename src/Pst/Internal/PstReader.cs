@@ -5,7 +5,7 @@ using Pst.Internal.Ndb;
 
 namespace Pst.Internal
 {
-    internal class PstReader
+    internal class PstReader : IPstReader
     {
         private const int RootOffset = 180;
         private const int CryptMethodOffset = 0x201;
@@ -30,7 +30,7 @@ namespace Pst.Internal
             VerifyHeader();
         }
 
-        internal bool IsAnsi
+        public bool IsAnsi
         {
             get { return _fileVersion == 14 || _fileVersion == 15; }
         }
@@ -40,7 +40,7 @@ namespace Pst.Internal
             get { return _input; }
         }
 
-        internal Block FindBlock(ulong bid)
+        public Block FindBlock(ulong bid)
         {
             var entry = _bbtReader.Find(bid);
             if (entry == null)
@@ -60,7 +60,7 @@ namespace Pst.Internal
             return result;
         }
 
-        internal Node FindNode(Nid nid)
+        public Node FindNode(Nid nid)
         {
             var entry = _nbtReader.Find(nid);
             if (entry == null)

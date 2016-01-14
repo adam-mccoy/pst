@@ -9,11 +9,11 @@ namespace Pst.Internal.Ltp
     {
         private Heap _heap;
         private BTree<Property, ushort> _bTree;
-        private PstReader _pstReader;
+        private IPstReader _pstReader;
 
         internal PropertyContext(
             Block block,
-            PstReader reader)
+            IPstReader reader)
         {
             _heap = new Heap(block);
             _pstReader = reader;

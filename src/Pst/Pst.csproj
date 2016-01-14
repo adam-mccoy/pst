@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Extensions\ByteArrayExtensions.cs" />
     <Compile Include="Folder.cs" />
+    <Compile Include="Internal\IPstReader.cs" />
     <Compile Include="Internal\Ltp\BTree.cs" />
     <Compile Include="Internal\Ltp\Heap.cs" />
     <Compile Include="Internal\Ltp\Property.cs" />
