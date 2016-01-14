@@ -45,6 +45,7 @@
     <Compile Include="BTreeTests.cs" />
     <Compile Include="Crc32Tests.cs" />
     <Compile Include="CryptTests.cs" />
+    <Compile Include="FolderTests.cs" />
     <Compile Include="HeapTests.cs" />
     <Compile Include="MessageStoreTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
