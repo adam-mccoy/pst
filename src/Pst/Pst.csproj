@@ -63,6 +63,7 @@
     <Compile Include="Internal\Ndb\NidType.cs" />
     <Compile Include="Internal\Ndb\Node.cs" />
     <Compile Include="Internal\Ndb\PageTrailer.cs" />
+    <Compile Include="Internal\Ndb\SubnodeReader.cs" />
     <Compile Include="Internal\PageType.cs" />
     <Compile Include="Internal\Crypt.cs" />
     <Compile Include="Internal\PstReader.cs" />

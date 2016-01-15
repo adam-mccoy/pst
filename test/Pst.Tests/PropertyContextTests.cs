@@ -57,7 +57,7 @@ namespace Pst.Tests
             reader.Setup(r => r.FindBlock(0x1234))
                 .Returns(Block.Create(_heapData));
 
-            var node = new Node(0x21, 0x1234, 0x5678);
+            var node = new Node(0x21, 0x1234, 0x5678, reader.Object);
             var pc = new PropertyContext(node, reader.Object);
 
             var result = pc.Get(PropertyKey.RecordKey);

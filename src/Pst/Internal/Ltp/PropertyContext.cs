@@ -29,7 +29,7 @@ namespace Pst.Internal.Ltp
             {
                 if ((prop.Hnid & 0x1f) == 0)
                     return _heap[prop.Hnid];
-                return _pstReader.FindBlock(prop.Hnid).Data;
+                return _node.FindSubnode(prop.Hnid).GetDataBlock().Data;
             }
 
             if (prop.Type.GetLength() <= 4)
@@ -40,7 +40,7 @@ namespace Pst.Internal.Ltp
 
         private void Initialize()
         {
-            var block = _pstReader.FindBlock(_node.DataBid);
+            var block = _node.GetDataBlock();
             _heap = new Heap(block);
             _bTree = new BTree<Property, ushort>(
                 _heap,

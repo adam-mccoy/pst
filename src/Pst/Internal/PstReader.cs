@@ -66,7 +66,7 @@ namespace Pst.Internal
             if (entry == null)
                 return null;
 
-            return new Node(entry.Nid, entry.DataBid, entry.SubnodeBid);
+            return new Node(entry.Nid, entry.DataBid, entry.SubnodeBid, this);
         }
 
         private void VerifyHeader()

@@ -29,7 +29,7 @@ namespace Pst.Tests
         {
             var reader = new Mock<IPstReader>();
             reader.Setup(r => r.FindNode(0x122))
-                .Returns(new Node(0x122, 0xaa8, 0x00));
+                .Returns(new Node(0x122, 0xaa8, 0x00, reader.Object));
             reader.Setup(r => r.FindBlock(0xaa8))
                 .Returns(Block.Create(FolderBlock));
 
@@ -43,7 +43,7 @@ namespace Pst.Tests
         {
             var reader = new Mock<IPstReader>();
             reader.Setup(r => r.FindNode(0x122))
-                .Returns(new Node(0x122, 0xaa8, 0x00));
+                .Returns(new Node(0x122, 0xaa8, 0x00, reader.Object));
             reader.Setup(r => r.FindBlock(0xaa8))
                 .Returns(Block.Create(FolderBlock));
 
@@ -57,7 +57,7 @@ namespace Pst.Tests
         {
             var reader = new Mock<IPstReader>();
             reader.Setup(r => r.FindNode(0x122))
-                .Returns(new Node(0x122, 0xaa8, 0x00));
+                .Returns(new Node(0x122, 0xaa8, 0x00, reader.Object));
             reader.Setup(r => r.FindBlock(0xaa8))
                 .Returns(Block.Create(FolderBlock));
 
@@ -71,7 +71,7 @@ namespace Pst.Tests
         {
             var reader = new Mock<IPstReader>();
             reader.Setup(r => r.FindNode(0x122))
-                .Returns(new Node(0x122, 0xaa8, 0x00));
+                .Returns(new Node(0x122, 0xaa8, 0x00, reader.Object));
             reader.Setup(r => r.FindBlock(0xaa8))
                 .Returns(Block.Create(FolderBlock));
 
