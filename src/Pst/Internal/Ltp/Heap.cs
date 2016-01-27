@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Pst.Internal.Ndb;
 using Pst.Extensions;
 
@@ -41,7 +40,7 @@ namespace Pst.Internal.Ltp
             get { return BitConverter.ToUInt16(_block.Data, _mapOffset + 2); }
         }
 
-        internal IList<byte> this[uint hid]
+        internal Segment<byte> this[uint hid]
         {
             get
             {

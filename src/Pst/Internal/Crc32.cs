@@ -292,7 +292,7 @@ namespace Pst.Internal
             return Calculate(bytes.Segment(0, bytes.Length));
         }
 
-        internal static uint Calculate(ArraySegment<byte> bytes)
+        internal static uint Calculate(Segment<byte> bytes)
         {
             uint crc = 0;
             var runningLength = bytes.Count < sizeof(uint) ? 0 : (bytes.Count / 8) * 8;
@@ -314,9 +314,8 @@ namespace Pst.Internal
                       CrcTableOffset32[(second >> 24) & 0xff];
             }
 
-            var list = bytes as IList<byte>;
             for (int i = 0; i < endUnaligned; i++)
-                crc = CrcTableOffset32[(crc ^ list[runningLength + i]) & 0xff] ^ (crc >> 8);
+                crc = CrcTableOffset32[(crc ^ bytes[runningLength + i]) & 0xff] ^ (crc >> 8);
 
             return crc;
         }

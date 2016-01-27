@@ -115,27 +115,26 @@ namespace Pst.Internal
             CryptPermute(data.Segment(0, data.Length), encrypt);
         }
 
-        internal static void CryptPermute(ArraySegment<byte> data, bool encrypt)
+        internal static void CryptPermute(Segment<byte> data, bool encrypt)
         {
             var tableOffset = encrypt ? R : I;
-            for (int i = 0, j = data.Offset; i < data.Count; i++, j++)
+            for (int i = 0; i < data.Count; i++)
             {
-                data.Array[j] = _cryptTable[tableOffset + data.Array[j]];
+                data[i] = _cryptTable[tableOffset + data.Array[i]];
             }
         }
 
         internal static void CryptCyclic(byte[] data, uint key)
         {
-            CryptCyclic(data.Segment(0, data.Length), key);
+            CryptCyclic(data.Segment(), key);
         }
 
-        internal static void CryptCyclic(ArraySegment<byte> data, uint key)
+        internal static void CryptCyclic(Segment<byte> data, uint key)
         {
             ushort w = (ushort)(key ^ (key >> 16));
-            var list = data as IList<byte>;
             for (int i = 0; i < data.Count; i++)
             {
-                var b = list[i];
+                var b = data[i];
                 b = (byte)(b + w);
                 b = _cryptTable[R + b];
                 b = (byte)(b + (byte)(w >> 8));
@@ -143,7 +142,7 @@ namespace Pst.Internal
                 b = (byte)(b - (byte)(w >> 8));
                 b = _cryptTable[I + b];
                 b = (byte)(b - w);
-                list[i] = b;
+                data[i] = b;
                 w++;
             }
         }

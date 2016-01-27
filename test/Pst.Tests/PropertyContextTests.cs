@@ -62,7 +62,7 @@ namespace Pst.Tests
 
             var result = pc.Get(PropertyKey.RecordKey);
 
-            CollectionAssert.AreEqual(expectedBytes, result);
+            CollectionAssert.AreEqual(expectedBytes, result.ToArray());
         }
     }
 }

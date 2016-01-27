@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Pst.Internal.Ltp
 {
     internal class BTree<T, TKey>
     {
         private readonly Heap _heap;
-        private readonly Func<IList<byte>, TKey> _keyFactory;
-        private readonly Func<IList<byte>, T> _valueFactory;
+        private readonly Func<Segment<byte>, TKey> _keyFactory;
+        private readonly Func<Segment<byte>, T> _valueFactory;
 
         private int _keySize;
         private int _valueSize;
@@ -18,8 +17,8 @@ namespace Pst.Internal.Ltp
 
         internal BTree(
             Heap heap,
-            Func<IList<byte>, TKey> keyFactory,
-            Func<IList<byte>, T> valueFactory)
+            Func<Segment<byte>, TKey> keyFactory,
+            Func<Segment<byte>, T> valueFactory)
         {
             _heap = heap;
             _keyFactory = keyFactory;
@@ -35,7 +34,7 @@ namespace Pst.Internal.Ltp
             if (keyIndex < 0)
                 return default(T);
 
-            return _valueFactory(root.Skip(keyIndex * _elementSize).Take(_elementSize).ToList());
+            return _valueFactory(root.Derive(keyIndex * _elementSize, _elementSize));
         }
 
         internal Heap Heap
@@ -43,25 +42,24 @@ namespace Pst.Internal.Ltp
             get { return _heap; }
         }
 
-        private TKey[] ReadKeys(IList<byte> data)
+        private TKey[] ReadKeys(Segment<byte> data)
         {
             var keyCount = data.Count / _elementSize;
             var keys = new TKey[keyCount];
             for (var i = 0; i < keyCount; i++)
-                keys[i] = _keyFactory(data.Skip(i * _elementSize).Take(_keySize).ToList());
+                keys[i] = _keyFactory(data.Derive(i * _elementSize, _keySize));
             return keys;
         }
 
         private void ProcessHeader()
         {
             var header = _heap[_heap.UserRoot];
-            Validate.Equals(header[0], 0xb5);
+            Validate.Equals(header.Array[header.Offset], 0xb5);
             _keySize = header[1];
             _valueSize = header[2];
             _elementSize = _keySize + _valueSize;
             _indexLevels = header[3];
-            // TODO: Optimize
-            _rootHid = BitConverter.ToUInt32(header.Skip(4).Take(4).ToArray(), 0);
+            _rootHid = BitConverter.ToUInt32(header.Array, header.Offset + 4);
         }
     }
 }

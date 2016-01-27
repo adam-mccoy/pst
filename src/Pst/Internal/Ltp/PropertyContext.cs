@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Pst.Internal.Ndb;
 
 namespace Pst.Internal.Ltp
@@ -21,7 +19,7 @@ namespace Pst.Internal.Ltp
             Initialize();
         }
 
-        internal IList<byte> Get(PropertyKey key)
+        internal Segment<byte> Get(PropertyKey key)
         {
             var prop = _bTree.Find((ushort)key);
             if (prop == null)
@@ -35,7 +33,7 @@ namespace Pst.Internal.Ltp
             }
 
             if (prop.Type.GetLength() <= 4)
-                return BitConverter.GetBytes(prop.Hnid).ToList();
+                return BitConverter.GetBytes(prop.Hnid);
 
             return _heap[prop.Hnid];
         }
@@ -46,18 +44,17 @@ namespace Pst.Internal.Ltp
             _heap = new Heap(block);
             _bTree = new BTree<Property, ushort>(
                 _heap,
-                b => BitConverter.ToUInt16(b.ToArray(), 0),
+                b => BitConverter.ToUInt16(b.Array, b.Offset),
                 CreateProperty);
         }
 
-        private Property CreateProperty(IList<byte> bytes)
+        private Property CreateProperty(Segment<byte> bytes)
         {
-            var buffer = bytes.ToArray();
             return new Property
             {
-                Key = (PropertyKey)BitConverter.ToUInt16(buffer, 0),
-                Type = (PropertyType)BitConverter.ToUInt16(buffer, 2),
-                Hnid = BitConverter.ToUInt32(buffer, 4)
+                Key = (PropertyKey)BitConverter.ToUInt16(bytes.Array, bytes.Offset),
+                Type = (PropertyType)BitConverter.ToUInt16(bytes.Array, bytes.Offset + 2),
+                Hnid = BitConverter.ToUInt32(bytes.Array, bytes.Offset + 4)
             };
         }
     }

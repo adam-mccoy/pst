@@ -22,15 +22,18 @@ namespace Pst
 
         public byte[] RecordKey
         {
-            get { return _context.Get(PropertyKey.RecordKey).ToArray(); }
+            get
+            {
+                return _context.Get(PropertyKey.RecordKey).ToArray();
+            }
         }
 
         public string DisplayName
         {
             get
             {
-                var bytes = _context.Get(PropertyKey.DisplayName).ToArray();
-                return Encoding.Unicode.GetString(bytes);
+                var prop = _context.Get(PropertyKey.DisplayName);
+                return Encoding.Unicode.GetString(prop.Array, prop.Offset, prop.Count);
             }
         }
 

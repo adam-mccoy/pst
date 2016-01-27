@@ -92,7 +92,7 @@ namespace Pst.Tests
 
             var item = heap[0x20];
 
-            CollectionAssert.AreEqual(expectedBytes, item);
+            CollectionAssert.AreEqual(expectedBytes, item.ToArray());
         }
     }
 }

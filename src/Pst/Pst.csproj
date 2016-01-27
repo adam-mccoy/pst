@@ -64,6 +64,7 @@
     <Compile Include="Internal\PageType.cs" />
     <Compile Include="Internal\Crypt.cs" />
     <Compile Include="Internal\PstReader.cs" />
+    <Compile Include="Internal\Segment.cs" />
     <Compile Include="Internal\Validate.cs" />
     <Compile Include="MessageStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

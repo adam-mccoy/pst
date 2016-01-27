@@ -60,7 +60,7 @@ namespace Pst.Tests
             var heap = new Heap(block);
             var btree = new BTree<byte[], ushort>(
                 heap,
-                b => BitConverter.ToUInt16(b.ToArray(), 0),
+                b => BitConverter.ToUInt16(b.Array, b.Offset),
                 b => b.ToArray());
 
             var result = btree.Find(1234);
@@ -80,7 +80,7 @@ namespace Pst.Tests
             var heap = new Heap(block);
             var btree = new BTree<byte[], ushort>(
                 heap,
-                b => BitConverter.ToUInt16(b.ToArray(), 0),
+                b => BitConverter.ToUInt16(b.Array, b.Offset),
                 b => b.ToArray());
 
             var result = btree.Find(0x35e5);
