@@ -6,6 +6,7 @@ namespace Pst.Internal.Ltp
     internal class BTree<T, TKey>
     {
         private readonly Heap _heap;
+        private readonly uint _headerHid;
         private readonly Func<Segment<byte>, TKey> _keyFactory;
         private readonly Func<Segment<byte>, T> _valueFactory;
 
@@ -17,13 +18,23 @@ namespace Pst.Internal.Ltp
 
         internal BTree(
             Heap heap,
+            uint headerHid,
             Func<Segment<byte>, TKey> keyFactory,
             Func<Segment<byte>, T> valueFactory)
         {
             _heap = heap;
+            _headerHid = headerHid;
             _keyFactory = keyFactory;
             _valueFactory = valueFactory;
             ProcessHeader();
+        }
+
+        internal BTree(
+            Heap heap,
+            Func<Segment<byte>, TKey> keyFactory,
+            Func<Segment<byte>, T> valueFactory)
+            : this(heap, heap.UserRoot, keyFactory, valueFactory)
+        {
         }
 
         internal T Find(TKey key)
@@ -53,7 +64,7 @@ namespace Pst.Internal.Ltp
 
         private void ProcessHeader()
         {
-            var header = _heap[_heap.UserRoot];
+            var header = _heap[_headerHid];
             Validate.Equals(header.Array[header.Offset], 0xb5);
             _keySize = header[1];
             _valueSize = header[2];
