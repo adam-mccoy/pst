@@ -87,5 +87,30 @@ namespace Pst.Tests
             Assert.IsNotNull(result);
             CollectionAssert.AreEqual(expectedBytes, result);
         }
+
+        [Test]
+        public void Gets_All_Elements()
+        {
+            var block = Block.Create(_heapData);
+            var heap = new Heap(block);
+            var btree = new BTree<byte[], ushort>(
+                heap,
+                b => BitConverter.ToUInt16(b.Array, b.Offset),
+                b => b.ToArray());
+
+            var items = btree.GetAll();
+
+            Assert.AreEqual(17, items.Count());
+            var item1 = items.ElementAt(0);
+            Assert.AreEqual(0xe34, item1.Item1);
+            CollectionAssert.AreEqual(
+                new byte[] { 0x34, 0x0e, 0x02, 0x01, 0xa0, 0x00, 0x00, 0x00 },
+                item1.Item2);
+            var item6 = items.ElementAt(5);
+            Assert.AreEqual(0x35df, item6.Item1);
+            CollectionAssert.AreEqual(
+                new byte[] { 0xdf, 0x35, 0x03, 0x00, 0xff, 0x00, 0x00, 0x00 },
+                item6.Item2);
+        }
     }
 }
