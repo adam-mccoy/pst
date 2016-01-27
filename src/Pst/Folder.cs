@@ -13,6 +13,7 @@ namespace Pst
         private readonly IPstReader _pstReader;
 
         private PropertyContext _properties;
+        private TableContext _hierarchy;
 
         internal Folder(Nid nid, IPstReader reader)
         {
@@ -57,14 +58,38 @@ namespace Pst
             }
         }
 
-        public ICollection<Folder> Folders { get; set; }
+        public ICollection<Folder> Folders
+        {
+            get
+            {
+                if (_nid.Type != NidType.NormalFolder)
+                    throw new InvalidOperationException();
+
+                var index = HierarchyTable.Index;
+                var folders = new Folder[index.Length];
+                for (var i = 0; i < index.Length; i++)
+                    folders[i] = new Folder(index[i].RowKey, _pstReader);
+                return folders;
+            }
+        }
+
+        private TableContext HierarchyTable
+        {
+            get
+            {
+                if (_hierarchy == null)
+                {
+                    var htNode = _pstReader.FindNode(Nid.ChangeType(_nid, NidType.HierarchyTable));
+                    _hierarchy = new TableContext(htNode, _pstReader);
+                }
+                return _hierarchy;
+            }
+        }
 
         private void Initialize()
         {
             var node = _pstReader.FindNode(_nid);
             _properties = new PropertyContext(node, _pstReader);
-
-            var htNode = _pstReader.FindNode(Nid.ChangeType(_nid, NidType.HierarchyTable));
         }
     }
 }
