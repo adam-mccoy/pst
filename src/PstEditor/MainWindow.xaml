@@ -1,0 +1,26 @@
+﻿<Window x:Class="PstEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PstEditor"
+        mc:Ignorable="d"
+        Title="PST Editor" Height="350" Width="525">
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCommand_Executed" />
+    </Window.CommandBindings>
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button Command="ApplicationCommands.Open">Open</Button>
+            </ToolBar>
+        </ToolBarTray>
+        <Grid>
+            <TreeView x:Name="folderList" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <TreeViewItem Header="Root Folder">
+                    <TreeViewItem Header="Folder 1"></TreeViewItem>
+                </TreeViewItem>
+            </TreeView>
+        </Grid>
+    </DockPanel>
+</Window>
