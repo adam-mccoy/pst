@@ -37,6 +37,12 @@ namespace Pst.Internal.Ndb
             return new Nid(value);
         }
 
+        public static implicit operator Nid(Segment<byte> bytes)
+        {
+            var value = BitConverter.ToUInt32(bytes.Array, bytes.Offset);
+            return new Nid(value);
+        }
+
         public static implicit operator uint(Nid nid)
         {
             return nid._value;

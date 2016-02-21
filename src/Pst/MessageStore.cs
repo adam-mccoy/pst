@@ -22,10 +22,7 @@ namespace Pst
 
         public byte[] RecordKey
         {
-            get
-            {
-                return _context.Get(PropertyKey.RecordKey).ToArray();
-            }
+            get { return _context.Get(PropertyKey.RecordKey).ToArray(); }
         }
 
         public string DisplayName
@@ -37,7 +34,21 @@ namespace Pst
             }
         }
 
-        public Folder RootFolder { get; set; }
+        private Folder _rootFolder;
+        public Folder RootFolder
+        {
+            get
+            {
+                if (_rootFolder == null)
+                {
+                    var prop = _context.Get(PropertyKey.IpmSubTreeEntryId);
+                    Nid nid = prop.Derive(20, 4);
+                    _rootFolder = new Folder(nid, _pstReader);
+                }
+                return _rootFolder;
+            }
+        }
+
         public Folder SearchFolder { get; set; }
         public Folder RecycleBin { get; set; }
 
