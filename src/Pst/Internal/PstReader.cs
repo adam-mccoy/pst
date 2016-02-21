@@ -46,7 +46,7 @@ namespace Pst.Internal
             if (entry == null)
                 return null;
 
-            var blockSize = 64 * ((entry.Length + 64) / 64);
+            var blockSize = 64 * ((entry.Length + Block.TrailerLength + 63) / 64);
             var block = new byte[blockSize];
             _input.Seek((long)entry.Bref.Ib, SeekOrigin.Begin);
             ReadBytes(block, 0, blockSize);

@@ -4,6 +4,8 @@ namespace Pst.Internal.Ndb
 {
     internal class Block
     {
+        public const int TrailerLength = 16;
+
         private Block()
         {
         }
