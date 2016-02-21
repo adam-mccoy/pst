@@ -15,12 +15,33 @@
                 <Button Command="ApplicationCommands.Open">Open</Button>
             </ToolBar>
         </ToolBarTray>
-        <Grid>
-            <TreeView x:Name="folderList" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <TreeViewItem Header="Root Folder">
-                    <TreeViewItem Header="Folder 1"></TreeViewItem>
-                </TreeViewItem>
+        <StackPanel DockPanel.Dock="Left">
+            <TreeView x:Name="folderList" ItemsSource="{Binding Folders}">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type local:FolderModel}" ItemsSource="{Binding Folders}">
+                        <TextBlock Text="{Binding Name}" />
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
             </TreeView>
-        </Grid>
+            <Grid DataContext="{Binding ElementName=folderList, Path=SelectedItem}" Height="300">
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Margin" Value="5, 2" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0"><Bold>Name:</Bold></TextBlock>
+                <TextBlock Grid.Column="1" Text="{Binding Name}" />
+                <TextBlock Grid.Column="0" Grid.Row="1"><Bold>Messages:</Bold></TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding MessageCount}" />
+            </Grid>
+        </StackPanel>
     </DockPanel>
 </Window>
