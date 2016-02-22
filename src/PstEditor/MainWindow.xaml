@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PstEditor"
         mc:Ignorable="d"
-        Title="PST Editor" Height="350" Width="525">
+        Title="PST Editor" Height="500" Width="800">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCommand_Executed" />
     </Window.CommandBindings>
@@ -15,33 +15,43 @@
                 <Button Command="ApplicationCommands.Open">Open</Button>
             </ToolBar>
         </ToolBarTray>
-        <StackPanel DockPanel.Dock="Left">
-            <TreeView x:Name="folderList" ItemsSource="{Binding Folders}">
-                <TreeView.Resources>
-                    <HierarchicalDataTemplate DataType="{x:Type local:FolderModel}" ItemsSource="{Binding Folders}">
-                        <TextBlock Text="{Binding Name}" />
-                    </HierarchicalDataTemplate>
-                </TreeView.Resources>
-            </TreeView>
-            <Grid DataContext="{Binding ElementName=folderList, Path=SelectedItem}" Height="300">
-                <Grid.Resources>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Margin" Value="5, 2" />
-                    </Style>
-                </Grid.Resources>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Column="0"><Bold>Name:</Bold></TextBlock>
-                <TextBlock Grid.Column="1" Text="{Binding Name}" />
-                <TextBlock Grid.Column="0" Grid.Row="1"><Bold>Messages:</Bold></TextBlock>
-                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding MessageCount}" />
-            </Grid>
-        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <DockPanel>
+                <Grid DataContext="{Binding ElementName=folderList, Path=SelectedItem}" DockPanel.Dock="Bottom" Background="WhiteSmoke">
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Margin" Value="5, 2" />
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0"><Bold>Name:</Bold></TextBlock>
+                    <TextBlock Grid.Column="1" Text="{Binding Name}" />
+                    <TextBlock Grid.Column="0" Grid.Row="1"><Bold>Messages:</Bold></TextBlock>
+                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding MessageCount}" />
+                </Grid>
+                <TreeView x:Name="folderList" ItemsSource="{Binding Folders}" BorderThickness="0">
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type local:FolderModel}" ItemsSource="{Binding Folders}">
+                            <TextBlock Text="{Binding Name}" />
+                        </HierarchicalDataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+            </DockPanel>
+            <GridSplitter Width="5" Grid.Column="1"  HorizontalAlignment="Stretch"/>
+            <StackPanel>
+            </StackPanel>
+        </Grid>
     </DockPanel>
 </Window>
