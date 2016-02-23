@@ -69,6 +69,7 @@
     <Compile Include="Internal\PstReader.cs" />
     <Compile Include="Internal\Segment.cs" />
     <Compile Include="Internal\Validate.cs" />
+    <Compile Include="Message.cs" />
     <Compile Include="MessageStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyKey.cs" />
