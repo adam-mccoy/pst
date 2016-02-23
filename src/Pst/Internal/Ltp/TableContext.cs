@@ -31,6 +31,11 @@ namespace Pst.Internal.Ltp
             }
         }
 
+        internal TcRow[] Rows
+        {
+            get { return null; }
+        }
+
         internal TcIndexItem SearchIndex(uint key)
         {
             var index = _rowIndex.Find(key);
