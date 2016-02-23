@@ -27,7 +27,7 @@ namespace Pst.Internal.Ltp
         {
             get
             {
-                return _rowIndex.GetAll().Select(t => new TcIndexItem { RowKey = t.Item1, RowIndex = t.Item2 }).ToArray();
+                return _rowIndex.GetAll().Select(t => new TcIndexItem { RowKey = t.Key, RowIndex = t.Value }).ToArray();
             }
         }
 

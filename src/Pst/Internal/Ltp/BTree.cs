@@ -53,16 +53,16 @@ namespace Pst.Internal.Ltp
             get { return _heap; }
         }
 
-        internal IEnumerable<Tuple<TKey, T>> GetAll()
+        internal IEnumerable<KeyValuePair<TKey, T>> GetAll()
         {
             var root = _heap[_rootHid];
             var itemCount = root.Count / _elementSize;
-            var items = new Tuple<TKey, T>[itemCount];
+            var items = new KeyValuePair<TKey, T>[itemCount];
             for (var i = 0; i < itemCount; i++)
             {
                 var key = _keyFactory(root.Derive(i * _elementSize, _keySize));
                 var value = _valueFactory(root.Derive(i * _elementSize, _elementSize));
-                items[i] = new Tuple<TKey, T>(key, value);
+                items[i] = new KeyValuePair<TKey, T>(key, value);
             }
             return items;
         }
