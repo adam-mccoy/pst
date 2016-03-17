@@ -9,6 +9,10 @@
         FinderEntryId = 0x35e7,
         ContentCount = 0x3602,
         UnreadCount = 0x3603,
-        Subfolders = 0x360a
+        Subfolders = 0x360a,
+        Hidden = 0x10f4,
+
+        LtpRowId = 0x67f2,
+        LtpRowVer = 0x67f3
     }
 }
