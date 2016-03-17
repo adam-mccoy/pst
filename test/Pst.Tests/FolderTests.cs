@@ -8,6 +8,8 @@ namespace Pst.Tests
     [TestFixture]
     public class FolderTests
     {
+        #region Test Data
+
         private static byte[] FolderBlock = new byte[]
         {
             0x72, 0x00, 0xec, 0xbc, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xb5, 0x02, 0x06, 0x00,
@@ -23,6 +25,24 @@ namespace Pst.Tests
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x80, 0x00, 0xf8, 0x6d, 0x06, 0xf0, 0xc5, 0xf5, 0xf8, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
         };
+
+        private static byte[] FolderContentTableBlock = new byte[]
+        {
+        };
+
+        private static byte[] FolderContentSubnodeTree = new byte[]
+        {
+        };
+
+        private static byte[] FolderContentSubnodeBlock = new byte[]
+        {
+        };
+
+        private static byte[] FolderHierarchyTableBlock = new byte[]
+        {
+        };
+
+        #endregion
 
         [Test]
         public void Gets_Display_Name()
@@ -90,6 +110,32 @@ namespace Pst.Tests
             var subfolders = folder.Folders;
 
             Assert.Greater(subfolders.Count, 0);
+        }
+
+        [Test]
+        public void Gets_Messages()
+        {
+            var reader = new Mock<IPstReader>();
+            reader.Setup(r => r.FindNode(0x22))
+                  .Returns(new Node(0x22, 0xabc, 0x00, reader.Object));
+            reader.Setup(r => r.FindBlock(0xabc))
+                  .Returns(Block.Create(FolderBlock));
+            reader.Setup(r => r.FindNode(0x2e))
+                  .Returns(new Node(0x2e, 0xdef, 0x00, reader.Object));
+            reader.Setup(r => r.FindBlock(0xdef))
+                  .Returns(Block.Create(FolderContentTableBlock));
+
+            var folder = new Folder(0x22, reader.Object);
+            var messages = folder.Messages;
+
+            Assert.AreEqual(1, messages.Count);
+        }
+
+        private IPstReader CreateTestReader()
+        {
+            var reader = new Mock<IPstReader>();
+
+            return reader.Object;
         }
     }
 }

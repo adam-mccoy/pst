@@ -73,6 +73,11 @@ namespace Pst
             }
         }
 
+        public ICollection<Message> Messages
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         private TableContext GetHierarchyTable()
         {
             var htNode = _pstReader.FindNode(Nid.ChangeType(_nid, NidType.HierarchyTable));
