@@ -14,6 +14,7 @@ namespace Pst
 
         private PropertyContext _properties;
         private Lazy<TableContext> _hierarchy;
+        private Lazy<TableContext> _contents;
 
         internal Folder(Nid nid, IPstReader reader)
         {
@@ -75,7 +76,12 @@ namespace Pst
 
         public ICollection<Message> Messages
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                var index = _contents.Value.Index;
+                var messages = new Message[index.Length];
+                return messages;
+            }
         }
 
         private TableContext GetHierarchyTable()
@@ -84,11 +90,18 @@ namespace Pst
             return new TableContext(htNode, _pstReader);
         }
 
+        private TableContext GetContentsTable()
+        {
+            var ctNode = _pstReader.FindNode(Nid.ChangeType(_nid, NidType.ContentsTable));
+            return new TableContext(ctNode, _pstReader);
+        }
+
         private void Initialize()
         {
             var node = _pstReader.FindNode(_nid);
             _properties = new PropertyContext(node, _pstReader);
             _hierarchy = new Lazy<TableContext>(GetHierarchyTable);
+            _contents = new Lazy<TableContext>(GetContentsTable);
         }
     }
 }
