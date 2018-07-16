@@ -1,5 +1,8 @@
+using System.Diagnostics;
+
 namespace Pst.Internal.Ndb
 {
+    [DebuggerDisplay("Type: {Type}, Value: {Value}")]
     internal struct Bid
     {
         internal Bid(ulong value)
@@ -10,8 +13,6 @@ namespace Pst.Internal.Ndb
         internal BlockType Type => (BlockType)(Value & 0x02);
 
         internal ulong Value { get; }
-
-        public override string ToString() => $"Type: {Type}, Value: 0x{Value:x8}";
 
         public static implicit operator Bid(ulong value) => new Bid(value);
 

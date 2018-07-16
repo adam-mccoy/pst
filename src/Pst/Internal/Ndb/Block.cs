@@ -1,7 +1,9 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 
 namespace Pst.Internal.Ndb
 {
+    [DebuggerDisplay("Bid: {Bid.Type} {Bid.Value}, Length: {Length}")]
     internal class Block
     {
         public const int TrailerLength = 16;

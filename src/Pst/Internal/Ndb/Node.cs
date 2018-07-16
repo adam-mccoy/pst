@@ -1,7 +1,9 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 
 namespace Pst.Internal.Ndb
 {
+    [DebuggerDisplay("Nid: {Nid.Type} {Nid.Index}, DataBid: {DataBid}, SubnodeBid: {SubnodeBid}")]
     internal class Node
     {
         private readonly IPstReader _reader;

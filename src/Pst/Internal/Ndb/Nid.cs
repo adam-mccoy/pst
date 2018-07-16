@@ -1,7 +1,9 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 
 namespace Pst.Internal.Ndb
 {
+    [DebuggerDisplay("Type: {Type}, Index: {Index}")]
     internal struct Nid
     {
         private uint _value;
