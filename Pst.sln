@@ -1,15 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pst", "src\Pst\Pst.csproj", "{1781A8DD-1317-49E0-8BEE-90A129588950}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pst", "src\Pst\Pst.csproj", "{1781A8DD-1317-49E0-8BEE-90A129588950}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pst.Tests", "test\Pst.Tests\Pst.Tests.csproj", "{067456C0-086C-46A8-B37F-1405717B7BFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pst.Tests", "test\Pst.Tests\Pst.Tests.csproj", "{067456C0-086C-46A8-B37F-1405717B7BFC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockCrypt", "src\BlockCrypt\BlockCrypt.csproj", "{4B130A85-AB85-4A72-8B11-71DD5A33F49F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PstEditor", "src\PstEditor\PstEditor.csproj", "{3FFB9743-B3D8-4C92-8519-C77928096B7E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3ACA8117-FDD7-41F5-B5B2-855A1C1683D4}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,5 +41,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {687EE065-1A34-4365-888D-77FEE676CF59}
 	EndGlobalSection
 EndGlobal
