@@ -40,7 +40,7 @@ namespace Pst.Internal
             get { return _input; }
         }
 
-        public Block FindBlock(ulong bid)
+        public Block FindBlock(Bid bid)
         {
             var entry = _bbtReader.Find(bid);
             if (entry == null)
@@ -54,7 +54,7 @@ namespace Pst.Internal
             var result = Block.Create(block);
             Validate.Match(result.Crc, Crc32.Calculate(result.Data.Segment(0, result.Length)), "Block CRC doesn't match.");
 
-            if (_cryptMethod != CryptMethod.None)
+            if (_cryptMethod != CryptMethod.None && bid.Type == BlockType.External)
                 DecryptBlock(result.Data, result.Bid);
 
             return result;

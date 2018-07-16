@@ -10,7 +10,7 @@ namespace Pst.Internal.Ndb
         {
         }
 
-        public ulong Bid { get; private set; }
+        public Bid Bid { get; private set; }
         public byte[] Data { get; private set; }
         public int Length { get; private set; }
         public ushort Signature { get; private set; }
