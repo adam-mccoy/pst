@@ -22,7 +22,11 @@ namespace PstEditor
 
         private void OpenCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            var dialog = new OpenFileDialog();
+            var dialog = new OpenFileDialog
+            {
+                DefaultExt = ".pst",
+                Filter = "Outlook files|*.pst|All files|*.*"
+            };
             if (dialog.ShowDialog().GetValueOrDefault())
                 OpenFile(dialog.FileName);
         }
