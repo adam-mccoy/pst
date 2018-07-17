@@ -29,7 +29,7 @@ namespace Pst.Internal.Ndb
 
         public static implicit operator Nid(Segment<byte> bytes)
         {
-            var value = BitConverter.ToUInt32(bytes.Array, bytes.Offset);
+            var value = bytes.ToUInt32();
             return new Nid(value);
         }
 

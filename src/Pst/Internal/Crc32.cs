@@ -1,4 +1,3 @@
-using System;
 using Pst.Extensions;
 
 namespace Pst.Internal
@@ -296,13 +295,13 @@ namespace Pst.Internal
 
             for (int i = 0, j = 0; i < runningLength / 8; i++, j+=8)
             {
-                crc ^= BitConverter.ToUInt32(bytes.Array, bytes.Offset + j);
+                crc ^= bytes.ToUInt32(j);
                 crc = CrcTableOffset88[crc & 0xff] ^
                       CrcTableOffset80[(crc >> 8) & 0xff] ^
                       CrcTableOffset72[(crc >> 16) & 0xff] ^
                       CrcTableOffset64[(crc >> 24) & 0xff];
 
-                var second = BitConverter.ToUInt32(bytes.Array, bytes.Offset + j + 4);
+                var second = bytes.ToUInt32(j + 4);
                 crc = crc ^
                       CrcTableOffset56[second & 0xff] ^
                       CrcTableOffset48[(second >> 8) & 0xff] ^

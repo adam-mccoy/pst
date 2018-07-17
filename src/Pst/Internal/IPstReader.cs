@@ -1,4 +1,4 @@
-﻿using Pst.Internal.Ndb;
+using Pst.Internal.Ndb;
 
 namespace Pst.Internal
 {

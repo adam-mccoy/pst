@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Pst.Internal.Ndb;
 
@@ -58,19 +57,19 @@ namespace Pst.Internal.Ltp
             var tableHeader = _heap[_heap.UserRoot];
             _numColumns = tableHeader[1];
             _columnOffsets = new TcColumnOffsets(
-                BitConverter.ToInt16(tableHeader.Array, tableHeader.Offset + 2),
-                BitConverter.ToInt16(tableHeader.Array, tableHeader.Offset + 4),
-                BitConverter.ToInt16(tableHeader.Array, tableHeader.Offset + 6),
-                BitConverter.ToInt16(tableHeader.Array, tableHeader.Offset + 8));
+                tableHeader.ToInt16(2),
+                tableHeader.ToInt16(4),
+                tableHeader.ToInt16(6),
+                tableHeader.ToInt16(8));
 
-            var rowIndexHid = BitConverter.ToUInt32(tableHeader.Array, tableHeader.Offset + 10);
+            var rowIndexHid = tableHeader.ToUInt32(10);
             _rowIndex = new BTree<uint, uint>(
                 _heap,
                 rowIndexHid,
-                s => BitConverter.ToUInt32(s.Array, s.Offset),
-                s => BitConverter.ToUInt32(s.Array, s.Offset + 4));
+                s => s.ToUInt32(),
+                s => s.ToUInt32(4));
 
-            var rowDataHnid = BitConverter.ToUInt32(tableHeader.Array, tableHeader.Offset + 14);
+            var rowDataHnid = tableHeader.ToUInt32(14);
             if ((rowDataHnid & 0x1f) == 0)
             {
                 _rowData = _heap[rowDataHnid];
@@ -85,12 +84,12 @@ namespace Pst.Internal.Ltp
             _columnDefs = new TcColumnDef[_numColumns];
             for (var i = 0; i < _numColumns; i++)
             {
-                var offset = tableHeader.Offset + 22 + (i * 8);
-                var tagType = BitConverter.ToUInt16(tableHeader.Array, offset);
-                var tagKey = BitConverter.ToUInt16(tableHeader.Array, offset + 2);
-                var dataOffset = BitConverter.ToUInt16(tableHeader.Array, offset + 4);
-                var dataLength = tableHeader.Array[offset + 6];
-                var cebIndex = tableHeader.Array[offset + 7];
+                var offsetBase = 22 + (i * 8);
+                var tagType = tableHeader.ToUInt16(offsetBase);
+                var tagKey = tableHeader.ToUInt16(offsetBase + 2);
+                var dataOffset = tableHeader.ToUInt16(offsetBase + 4);
+                var dataLength = tableHeader[offsetBase + 6];
+                var cebIndex = tableHeader[offsetBase + 7];
                 var def = new TcColumnDef
                 {
                     Tag = new ColumnTag

@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using Pst.Internal;
 using Pst.Internal.Ltp;
 using Pst.Internal.Ndb;
@@ -23,41 +22,10 @@ namespace Pst
             Initialize();
         }
 
-        public string Name
-        {
-            get
-            {
-                var prop = _properties.Get(PropertyKey.DisplayName);
-                return Encoding.Unicode.GetString(prop.Array, prop.Offset, prop.Count);
-            }
-        }
-
-        public int ItemCount
-        {
-            get
-            {
-                var prop = _properties.Get(PropertyKey.ContentCount);
-                return BitConverter.ToInt32(prop.Array, prop.Offset);
-            }
-        }
-
-        public int UnreadCount
-        {
-            get
-            {
-                var prop = _properties.Get(PropertyKey.UnreadCount);
-                return BitConverter.ToInt32(prop.Array, prop.Offset);
-            }
-        }
-
-        public bool HasSubfolders
-        {
-            get
-            {
-                var prop = _properties.Get(PropertyKey.Subfolders);
-                return BitConverter.ToBoolean(prop.Array, prop.Offset);
-            }
-        }
+        public string Name => _pstReader.DecodeString(_properties.Get(PropertyKey.DisplayName));
+        public int ItemCount => _properties.Get(PropertyKey.ContentCount).ToInt32();
+        public int UnreadCount => _properties.Get(PropertyKey.UnreadCount).ToInt32();
+        public bool HasSubfolders => _properties.Get(PropertyKey.Subfolders).ToBoolean();
 
         public ICollection<Folder> Folders
         {

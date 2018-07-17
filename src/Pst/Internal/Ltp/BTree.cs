@@ -80,7 +80,7 @@ namespace Pst.Internal.Ltp
             _valueSize = header[2];
             _elementSize = _keySize + _valueSize;
             _indexLevels = header[3];
-            _rootHid = BitConverter.ToUInt32(header.Array, header.Offset + 4);
+            _rootHid = header.ToUInt32(4);
         }
     }
 }

@@ -1,4 +1,3 @@
-using System.Text;
 using Pst.Internal;
 using Pst.Internal.Ltp;
 using Pst.Internal.Ndb;
@@ -21,14 +20,7 @@ namespace Pst
 
         public byte[] RecordKey => _context.Get(PropertyKey.RecordKey).ToArray();
 
-        public string DisplayName
-        {
-            get
-            {
-                var prop = _context.Get(PropertyKey.DisplayName);
-                return Encoding.Unicode.GetString(prop.Array, prop.Offset, prop.Count);
-            }
-        }
+        public string DisplayName => _pstReader.DecodeString(_context.Get(PropertyKey.DisplayName));
 
         private Folder _rootFolder;
         public Folder RootFolder

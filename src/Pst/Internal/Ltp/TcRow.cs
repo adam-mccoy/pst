@@ -1,4 +1,3 @@
-﻿using System;
 using System.Linq;
 using Pst.Internal.Ndb;
 
@@ -51,7 +50,7 @@ namespace Pst.Internal.Ltp
             }
             else
             {
-                var hnid = BitConverter.ToUInt32(_rowData.Array, _rowData.Offset + offset);
+                var hnid = _rowData.ToUInt32(offset);
                 if ((hnid & 0x1f) == 0)
                 {
                     data = _heap[hnid];

@@ -44,15 +44,15 @@ namespace Pst.Internal.Ltp
             _heap = new Heap(block);
             _bTree = new BTree<Property, ushort>(
                 _heap,
-                b => BitConverter.ToUInt16(b.Array, b.Offset),
+                b => b.ToUInt16(),
                 CreateProperty);
         }
 
         private Property CreateProperty(Segment<byte> bytes) => new Property
         {
-            Key = (PropertyKey)BitConverter.ToUInt16(bytes.Array, bytes.Offset),
-            Type = (PropertyType)BitConverter.ToUInt16(bytes.Array, bytes.Offset + 2),
-            Hnid = BitConverter.ToUInt32(bytes.Array, bytes.Offset + 4)
+            Key = (PropertyKey)bytes.ToUInt16(),
+            Type = (PropertyType)bytes.ToUInt16(2),
+            Hnid = bytes.ToUInt32(4)
         };
     }
 }
