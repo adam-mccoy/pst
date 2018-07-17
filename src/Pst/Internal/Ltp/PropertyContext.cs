@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Pst.Internal.Ndb;
 
 namespace Pst.Internal.Ltp
@@ -48,14 +48,11 @@ namespace Pst.Internal.Ltp
                 CreateProperty);
         }
 
-        private Property CreateProperty(Segment<byte> bytes)
+        private Property CreateProperty(Segment<byte> bytes) => new Property
         {
-            return new Property
-            {
-                Key = (PropertyKey)BitConverter.ToUInt16(bytes.Array, bytes.Offset),
-                Type = (PropertyType)BitConverter.ToUInt16(bytes.Array, bytes.Offset + 2),
-                Hnid = BitConverter.ToUInt32(bytes.Array, bytes.Offset + 4)
-            };
-        }
+            Key = (PropertyKey)BitConverter.ToUInt16(bytes.Array, bytes.Offset),
+            Type = (PropertyType)BitConverter.ToUInt16(bytes.Array, bytes.Offset + 2),
+            Hnid = BitConverter.ToUInt32(bytes.Array, bytes.Offset + 4)
+        };
     }
 }

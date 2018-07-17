@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Pst.Internal.Ltp
 {
     internal class BTree<T, TKey>
     {
-        private readonly Heap _heap;
         private readonly uint _headerHid;
         private readonly Func<Segment<byte>, TKey> _keyFactory;
         private readonly Func<Segment<byte>, T> _valueFactory;
@@ -22,7 +21,7 @@ namespace Pst.Internal.Ltp
             Func<Segment<byte>, TKey> keyFactory,
             Func<Segment<byte>, T> valueFactory)
         {
-            _heap = heap;
+            Heap = heap;
             _headerHid = headerHid;
             _keyFactory = keyFactory;
             _valueFactory = valueFactory;
@@ -39,7 +38,7 @@ namespace Pst.Internal.Ltp
 
         internal T Find(TKey key)
         {
-            var root = _heap[_rootHid];
+            var root = Heap[_rootHid];
             var keys = ReadKeys(root);
             var keyIndex = Array.BinarySearch(keys, key);
             if (keyIndex < 0)
@@ -48,14 +47,11 @@ namespace Pst.Internal.Ltp
             return _valueFactory(root.Derive(keyIndex * _elementSize, _elementSize));
         }
 
-        internal Heap Heap
-        {
-            get { return _heap; }
-        }
+        internal Heap Heap { get; }
 
         internal IEnumerable<KeyValuePair<TKey, T>> GetAll()
         {
-            var root = _heap[_rootHid];
+            var root = Heap[_rootHid];
             var itemCount = root.Count / _elementSize;
             var items = new KeyValuePair<TKey, T>[itemCount];
             for (var i = 0; i < itemCount; i++)
@@ -78,8 +74,8 @@ namespace Pst.Internal.Ltp
 
         private void ProcessHeader()
         {
-            var header = _heap[_headerHid];
-            Validate.Equals(header.Array[header.Offset], 0xb5);
+            var header = Heap[_headerHid];
+            Validate.Match(header[0], 0xb5, "Invalid type");
             _keySize = header[1];
             _valueSize = header[2];
             _elementSize = _keySize + _valueSize;

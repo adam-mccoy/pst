@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using Pst.Extensions;
 
 namespace Pst.Internal
 {
     internal static class Crc32
     {
-        private static uint[] CrcTableOffset32 =
+        private static readonly uint[] CrcTableOffset32 =
         {
             0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
             0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91,
@@ -41,7 +40,7 @@ namespace Pst.Internal
             0xbdbdf21c, 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf,
             0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
         };
-        private static uint[] CrcTableOffset40 = 
+        private static readonly uint[] CrcTableOffset40 = 
         {
             0x00000000, 0x191b3141, 0x32366282, 0x2b2d53c3, 0x646cc504, 0x7d77f445, 0x565aa786, 0x4f4196c7,
             0xc8d98a08, 0xd1c2bb49, 0xfaefe88a, 0xe3f4d9cb, 0xacb54f0c, 0xb5ae7e4d, 0x9e832d8e, 0x87981ccf,
@@ -76,7 +75,7 @@ namespace Pst.Internal
             0x14bce1bd, 0x0da7d0fc, 0x268a833f, 0x3f91b27e, 0x70d024b9, 0x69cb15f8, 0x42e6463b, 0x5bfd777a,
             0xdc656bb5, 0xc57e5af4, 0xee530937, 0xf7483876, 0xb809aeb1, 0xa1129ff0, 0x8a3fcc33, 0x9324fd72
         };
-        private static uint[] CrcTableOffset48 =
+        private static readonly uint[] CrcTableOffset48 =
         {
             0x00000000, 0x01c26a37, 0x0384d46e, 0x0246be59, 0x0709a8dc, 0x06cbc2eb, 0x048d7cb2, 0x054f1685,
             0x0e1351b8, 0x0fd13b8f, 0x0d9785d6, 0x0c55efe1, 0x091af964, 0x08d89353, 0x0a9e2d0a, 0x0b5c473d,
@@ -111,7 +110,7 @@ namespace Pst.Internal
             0xb5c473d0, 0xb40619e7, 0xb640a7be, 0xb782cd89, 0xb2cddb0c, 0xb30fb13b, 0xb1490f62, 0xb08b6555,
             0xbbd72268, 0xba15485f, 0xb853f606, 0xb9919c31, 0xbcde8ab4, 0xbd1ce083, 0xbf5a5eda, 0xbe9834ed
         };
-        private static uint[] CrcTableOffset56 =
+        private static readonly uint[] CrcTableOffset56 =
         {
             0x00000000, 0xb8bc6765, 0xaa09c88b, 0x12b5afee, 0x8f629757, 0x37def032, 0x256b5fdc, 0x9dd738b9,
             0xc5b428ef, 0x7d084f8a, 0x6fbde064, 0xd7018701, 0x4ad6bfb8, 0xf26ad8dd, 0xe0df7733, 0x58631056,
@@ -146,7 +145,7 @@ namespace Pst.Internal
             0x866616a7, 0x3eda71c2, 0x2c6fde2c, 0x94d3b949, 0x090481f0, 0xb1b8e695, 0xa30d497b, 0x1bb12e1e,
             0x43d23e48, 0xfb6e592d, 0xe9dbf6c3, 0x516791a6, 0xccb0a91f, 0x740cce7a, 0x66b96194, 0xde0506f1
         };
-        private static uint[] CrcTableOffset64 =
+        private static readonly uint[] CrcTableOffset64 =
         {
             0x00000000, 0x3d6029b0, 0x7ac05360, 0x47a07ad0, 0xf580a6c0, 0xc8e08f70, 0x8f40f5a0, 0xb220dc10,
             0x30704bc1, 0x0d106271, 0x4ab018a1, 0x77d03111, 0xc5f0ed01, 0xf890c4b1, 0xbf30be61, 0x825097d1,
@@ -181,7 +180,7 @@ namespace Pst.Internal
             0x4834505d, 0x755479ed, 0x32f4033d, 0x0f942a8d, 0xbdb4f69d, 0x80d4df2d, 0xc774a5fd, 0xfa148c4d,
             0x78441b9c, 0x4524322c, 0x028448fc, 0x3fe4614c, 0x8dc4bd5c, 0xb0a494ec, 0xf704ee3c, 0xca64c78c
         };
-        private static uint[] CrcTableOffset72 =
+        private static readonly uint[] CrcTableOffset72 =
         {
             0x00000000, 0xcb5cd3a5, 0x4dc8a10b, 0x869472ae, 0x9b914216, 0x50cd91b3, 0xd659e31d, 0x1d0530b8,
             0xec53826d, 0x270f51c8, 0xa19b2366, 0x6ac7f0c3, 0x77c2c07b, 0xbc9e13de, 0x3a0a6170, 0xf156b2d5,
@@ -216,7 +215,7 @@ namespace Pst.Internal
             0x15921919, 0xdececabc, 0x585ab812, 0x93066bb7, 0x8e035b0f, 0x455f88aa, 0xc3cbfa04, 0x089729a1,
             0xf9c19b74, 0x329d48d1, 0xb4093a7f, 0x7f55e9da, 0x6250d962, 0xa90c0ac7, 0x2f987869, 0xe4c4abcc
         };
-        private static uint[] CrcTableOffset80 =
+        private static readonly uint[] CrcTableOffset80 =
         {
             0x00000000, 0xa6770bb4, 0x979f1129, 0x31e81a9d, 0xf44f2413, 0x52382fa7, 0x63d0353a, 0xc5a73e8e,
             0x33ef4e67, 0x959845d3, 0xa4705f4e, 0x020754fa, 0xc7a06a74, 0x61d761c0, 0x503f7b5d, 0xf64870e9,
@@ -251,7 +250,7 @@ namespace Pst.Internal
             0x647e3ad9, 0xc209316d, 0xf3e12bf0, 0x55962044, 0x90311eca, 0x3646157e, 0x07ae0fe3, 0xa1d90457,
             0x579174be, 0xf1e67f0a, 0xc00e6597, 0x66796e23, 0xa3de50ad, 0x05a95b19, 0x34414184, 0x92364a30
         };
-        private static uint[] CrcTableOffset88 =
+        private static readonly uint[] CrcTableOffset88 =
         {
             0x00000000, 0xccaa009e, 0x4225077d, 0x8e8f07e3, 0x844a0efa, 0x48e00e64, 0xc66f0987, 0x0ac50919,
             0xd3e51bb5, 0x1f4f1b2b, 0x91c01cc8, 0x5d6a1c56, 0x57af154f, 0x9b0515d1, 0x158a1232, 0xd92012ac,
@@ -287,10 +286,7 @@ namespace Pst.Internal
             0x2c8e0fff, 0xe0240f61, 0x6eab0882, 0xa201081c, 0xa8c40105, 0x646e019b, 0xeae10678, 0x264b06e6
         };
 
-        internal static uint Calculate(byte[] bytes)
-        {
-            return Calculate(bytes.Segment(0, bytes.Length));
-        }
+        internal static uint Calculate(byte[] bytes) => Calculate(bytes.Segment(0, bytes.Length));
 
         internal static uint Calculate(Segment<byte> bytes)
         {
@@ -314,7 +310,7 @@ namespace Pst.Internal
                       CrcTableOffset32[(second >> 24) & 0xff];
             }
 
-            for (int i = 0; i < endUnaligned; i++)
+            for (var i = 0; i < endUnaligned; i++)
                 crc = CrcTableOffset32[(crc ^ bytes[runningLength + i]) & 0xff] ^ (crc >> 8);
 
             return crc;

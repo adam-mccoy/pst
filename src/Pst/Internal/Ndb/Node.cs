@@ -24,10 +24,7 @@ namespace Pst.Internal.Ndb
         internal ulong DataBid { get; private set; }
         internal ulong SubnodeBid { get; private set; }
 
-        internal Block GetDataBlock()
-        {
-            return _reader.FindBlock(DataBid);
-        }
+        internal Block GetDataBlock() => _reader.FindBlock(DataBid);
 
         internal Node FindSubnode(Nid subnodeNid)
         {

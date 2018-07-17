@@ -1,6 +1,6 @@
-﻿using Pst;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Pst;
 
 namespace PstEditor
 {
@@ -13,15 +13,9 @@ namespace PstEditor
             _folder = folder;
         }
 
-        public string Name
-        {
-            get { return _folder.Name; }
-        }
+        public string Name => _folder.Name;
 
-        public int MessageCount
-        {
-            get { return _folder.ItemCount; }
-        }
+        public int MessageCount => _folder.ItemCount;
 
         public ObservableCollection<FolderModel> Folders
         {

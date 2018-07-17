@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Pst.Internal.Ndb;
 
@@ -25,13 +25,7 @@ namespace Pst.Internal.Ltp
             Initialize();
         }
 
-        internal TcIndexItem[] Index
-        {
-            get
-            {
-                return _rowIndex.GetAll().Select(t => new TcIndexItem { RowKey = t.Key, RowIndex = t.Value }).ToArray();
-            }
-        }
+        internal TcIndexItem[] Index => _rowIndex.GetAll().Select(t => new TcIndexItem { RowKey = t.Key, RowIndex = t.Value }).ToArray();
 
         internal TcRow[] Rows
         {
@@ -89,7 +83,7 @@ namespace Pst.Internal.Ltp
             }
 
             _columnDefs = new TcColumnDef[_numColumns];
-            for (int i = 0; i < _numColumns; i++)
+            for (var i = 0; i < _numColumns; i++)
             {
                 var offset = tableHeader.Offset + 22 + (i * 8);
                 var tagType = BitConverter.ToUInt16(tableHeader.Array, offset);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Pst.Extensions;
 using Pst.Internal.Ndb;
@@ -17,7 +17,6 @@ namespace Pst.Internal
         private const int UnicodeHeaderLength = 564;
         private const int AnsiHeaderLength = 512;
 
-        private readonly Stream _input;
         private ushort _fileVersion;
         private CryptMethod _cryptMethod;
         private BTreeReader<BbtEntry> _bbtReader;
@@ -26,19 +25,13 @@ namespace Pst.Internal
         internal PstReader(Stream input)
         {
             ValidateStream(input);
-            _input = input;
+            Stream = input;
             VerifyHeader();
         }
 
-        public bool IsAnsi
-        {
-            get { return _fileVersion == 14 || _fileVersion == 15; }
-        }
+        public bool IsAnsi => _fileVersion == 14 || _fileVersion == 15;
 
-        internal Stream Stream
-        {
-            get { return _input; }
-        }
+        internal Stream Stream { get; }
 
         public Block FindBlock(Bid bid)
         {
@@ -48,7 +41,7 @@ namespace Pst.Internal
 
             var blockSize = 64 * ((entry.Length + Block.TrailerLength + 63) / 64);
             var block = new byte[blockSize];
-            _input.Seek((long)entry.Bref.Ib, SeekOrigin.Begin);
+            Stream.Seek((long)entry.Bref.Ib, SeekOrigin.Begin);
             ReadBytes(block, 0, blockSize);
 
             var result = Block.Create(block);
@@ -88,8 +81,8 @@ namespace Pst.Internal
                 BitConverter.ToUInt64(buffer, RootOffset + 52),
                 BitConverter.ToUInt64(buffer, RootOffset + 60));
 
-            _nbtReader = new BTreeReader<NbtEntry>(_input, (long)nbt.Ib);
-            _bbtReader = new BTreeReader<BbtEntry>(_input, (long)bbt.Ib);
+            _nbtReader = new BTreeReader<NbtEntry>(Stream, (long)nbt.Ib);
+            _bbtReader = new BTreeReader<BbtEntry>(Stream, (long)bbt.Ib);
 
             _cryptMethod = (CryptMethod)buffer[CryptMethodOffset];
         }
@@ -112,7 +105,7 @@ namespace Pst.Internal
         {
             var bytesRead = 0;
             while (bytesRead < count)
-                bytesRead += _input.Read(buffer, offset + bytesRead, count - bytesRead);
+                bytesRead += Stream.Read(buffer, offset + bytesRead, count - bytesRead);
         }
 
         private void ValidateStream(Stream input)

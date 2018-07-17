@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using NUnit.Framework;
 using Pst.Internal.Ltp;
@@ -9,7 +9,7 @@ namespace Pst.Tests
     [TestFixture]
     public class BTreeTests
     {
-        private static byte[] _heapData = new byte[]
+        private static readonly byte[] HeapData = new byte[]
         {
             0xa6, 0x01, 0xec, 0xbc, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xb5, 0x02, 0x06, 0x00,
             0x40, 0x00, 0x00, 0x00, 0x34, 0x0e, 0x02, 0x01, 0xa0, 0x00, 0x00, 0x00, 0x38, 0x0e, 0x03, 0x00,
@@ -48,7 +48,7 @@ namespace Pst.Tests
         [Test]
         public void Validates_Header()
         {
-            var block = Block.Create(_heapData);
+            var block = Block.Create(HeapData);
             var heap = new Heap(block);
             new BTree<ulong, ushort>(heap, null, null);
         }
@@ -56,7 +56,7 @@ namespace Pst.Tests
         [Test]
         public void Find_Nonexistent_Element_Returns_Null()
         {
-            var block = Block.Create(_heapData);
+            var block = Block.Create(HeapData);
             var heap = new Heap(block);
             var btree = new BTree<byte[], ushort>(
                 heap,
@@ -76,7 +76,7 @@ namespace Pst.Tests
                 0x60, 0x01, 0x00, 0x00
             };
 
-            var block = Block.Create(_heapData);
+            var block = Block.Create(HeapData);
             var heap = new Heap(block);
             var btree = new BTree<byte[], ushort>(
                 heap,
@@ -91,7 +91,7 @@ namespace Pst.Tests
         [Test]
         public void Gets_All_Elements()
         {
-            var block = Block.Create(_heapData);
+            var block = Block.Create(HeapData);
             var heap = new Heap(block);
             var btree = new BTree<byte[], ushort>(
                 heap,

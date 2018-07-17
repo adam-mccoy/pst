@@ -1,22 +1,17 @@
-﻿namespace Pst.Internal.Ltp
+namespace Pst.Internal.Ltp
 {
     internal static class PropertyTypeExtension
     {
-        internal static bool IsMultiValue(this PropertyType type)
-        {
-            return ((uint)type & 0x1000) == 1;
-        }
+        internal static bool IsMultiValue(this PropertyType type) => ((uint)type & 0x1000) == 1;
 
-        internal static bool IsVariableLength(this PropertyType type)
-        {
-            return type == PropertyType.String ||
-                   type == PropertyType.String8 ||
-                   type == PropertyType.ServerId ||
-                   type == PropertyType.Restriction ||
-                   type == PropertyType.RuleAction ||
-                   type == PropertyType.Binary ||
-                   type.IsMultiValue();
-        }
+        internal static bool IsVariableLength(this PropertyType type) =>
+            type == PropertyType.String ||
+            type == PropertyType.String8 ||
+            type == PropertyType.ServerId ||
+            type == PropertyType.Restriction ||
+            type == PropertyType.RuleAction ||
+            type == PropertyType.Binary ||
+            type.IsMultiValue();
 
         internal static int GetLength(this PropertyType type)
         {

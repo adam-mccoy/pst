@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Pst.Internal.Ndb
 {
@@ -38,7 +38,7 @@ namespace Pst.Internal.Ndb
         {
             var numEntries = BitConverter.ToUInt16(block.Data, 2);
 
-            for (int i = 0; i < numEntries; i++)
+            for (var i = 0; i < numEntries; i++)
             {
                 var entryNid = BitConverter.ToUInt32(block.Data, 8 + i * 24);
                 if (entryNid == nid)
@@ -59,7 +59,7 @@ namespace Pst.Internal.Ndb
         {
             var numEntries = BitConverter.ToUInt16(block.Data, 2);
 
-            for (int i = 0; i < numEntries; i++)
+            for (var i = 0; i < numEntries; i++)
             {
                 var entryNid = BitConverter.ToUInt32(block.Data, 8 + i * 16);
                 if (entryNid > nid)

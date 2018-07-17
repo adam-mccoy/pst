@@ -1,4 +1,4 @@
-﻿namespace Pst.Internal.Ndb
+namespace Pst.Internal.Ndb
 {
     internal class Bref
     {
@@ -11,19 +11,14 @@
         internal ulong Bid { get; private set; }
         internal ulong Ib { get; private set; }
 
+        public override bool Equals(object obj) => obj is Bref bref && Bid == bref.Bid && Ib == bref.Ib;
+
         public override int GetHashCode()
         {
-            return 17 ^ (int)Bid ^ (int)Ib;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == this) return true;
-
-            var bref = obj as Bref;
-            if (bref == null) return false;
-
-            return bref.Bid == Bid && bref.Ib == Ib;
+            var hashCode = -1068386286;
+            hashCode = hashCode * -1521134295 + Bid.GetHashCode();
+            hashCode = hashCode * -1521134295 + Ib.GetHashCode();
+            return hashCode;
         }
     }
 }

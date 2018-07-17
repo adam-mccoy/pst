@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Pst.Internal.Ndb;
 using Pst.Extensions;
 
@@ -20,25 +20,13 @@ namespace Pst.Internal.Ltp
                 _allocations[i] = BitConverter.ToUInt16(_block.Data, _mapOffset + 4 + i * 2);
         }
 
-        internal byte ClientSignature
-        {
-            get { return _block.Data[3]; }
-        }
+        internal byte ClientSignature => _block.Data[3];
 
-        internal uint UserRoot
-        {
-            get { return BitConverter.ToUInt32(_block.Data, 4); }
-        }
+        internal uint UserRoot => BitConverter.ToUInt32(_block.Data, 4);
 
-        internal int AllocatedCount
-        {
-            get { return BitConverter.ToUInt16(_block.Data, _mapOffset); }
-        }
+        internal int AllocatedCount => BitConverter.ToUInt16(_block.Data, _mapOffset);
 
-        internal int FreedCount
-        {
-            get { return BitConverter.ToUInt16(_block.Data, _mapOffset + 2); }
-        }
+        internal int FreedCount => BitConverter.ToUInt16(_block.Data, _mapOffset + 2);
 
         internal Segment<byte> this[uint hid]
         {

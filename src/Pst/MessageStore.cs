@@ -1,8 +1,7 @@
-﻿using Pst.Internal;
+using System.Text;
+using Pst.Internal;
 using Pst.Internal.Ltp;
 using Pst.Internal.Ndb;
-using System.Linq;
-using System.Text;
 
 namespace Pst
 {
@@ -20,10 +19,7 @@ namespace Pst
             Initialize();
         }
 
-        public byte[] RecordKey
-        {
-            get { return _context.Get(PropertyKey.RecordKey).ToArray(); }
-        }
+        public byte[] RecordKey => _context.Get(PropertyKey.RecordKey).ToArray();
 
         public string DisplayName
         {

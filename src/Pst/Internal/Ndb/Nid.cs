@@ -19,25 +19,13 @@ namespace Pst.Internal.Ndb
             _value = (uint)type | index << 5;
         }
 
-        internal NidType Type
-        {
-            get { return (NidType)(_value & 0x1f); }
-        }
+        internal NidType Type => (NidType)(_value & 0x1f);
 
-        internal uint Index
-        {
-            get { return _value >> 5; }
-        }
+        internal uint Index => _value >> 5;
 
-        internal static Nid ChangeType(Nid nid, NidType type)
-        {
-            return new Nid(type, nid.Index);
-        }
+        internal static Nid ChangeType(Nid nid, NidType type) => new Nid(type, nid.Index);
 
-        public static implicit operator Nid(uint value)
-        {
-            return new Nid(value);
-        }
+        public static implicit operator Nid(uint value) => new Nid(value);
 
         public static implicit operator Nid(Segment<byte> bytes)
         {
@@ -45,10 +33,7 @@ namespace Pst.Internal.Ndb
             return new Nid(value);
         }
 
-        public static implicit operator uint(Nid nid)
-        {
-            return nid._value;
-        }
+        public static implicit operator uint(Nid nid) => nid._value;
 
         private static void ValidateNid(uint value)
         {

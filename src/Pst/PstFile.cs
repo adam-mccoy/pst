@@ -1,6 +1,6 @@
-﻿using Pst.Internal;
 using System;
 using System.IO;
+using Pst.Internal;
 
 namespace Pst
 {

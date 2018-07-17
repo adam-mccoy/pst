@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +23,7 @@ namespace Pst.Internal
             if (obj1.Count != obj1.Count)
                 throw new Exception(message);
 
-            for (int i = 0; i < obj1.Count; i++)
+            for (var i = 0; i < obj1.Count; i++)
             {
                 if (!obj1.Array[obj1.Offset + i].Equals(obj2.Array[obj2.Offset + i]))
                     throw new Exception(message);

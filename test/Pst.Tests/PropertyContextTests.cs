@@ -1,4 +1,4 @@
-﻿using Moq;
+using Moq;
 using NUnit.Framework;
 using Pst.Internal;
 using Pst.Internal.Ltp;
@@ -10,7 +10,7 @@ namespace Pst.Tests
     public class PropertyContextTests
     {
         #region Test Data
-        private static byte[] _heapData = new byte[]
+        private static readonly byte[] HeapData = new byte[]
         {
             0xa6, 0x01, 0xec, 0xbc, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xb5, 0x02, 0x06, 0x00,
             0x40, 0x00, 0x00, 0x00, 0x34, 0x0e, 0x02, 0x01, 0xa0, 0x00, 0x00, 0x00, 0x38, 0x0e, 0x03, 0x00,
@@ -57,7 +57,7 @@ namespace Pst.Tests
             };
             var reader = new Mock<IPstReader>();
             reader.Setup(r => r.FindBlock(0x1234))
-                .Returns(Block.Create(_heapData));
+                .Returns(Block.Create(HeapData));
 
             var node = new Node(0x21, 0x1234, 0x5678, reader.Object);
             var pc = new PropertyContext(node, reader.Object);

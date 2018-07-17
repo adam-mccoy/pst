@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Pst.Internal.Ltp;
 using Pst.Internal.Ndb;
 
@@ -7,7 +7,7 @@ namespace Pst.Tests
     [TestFixture]
     public class HeapTests
     {
-        private static byte[] _heapData = new byte[]
+        private static readonly byte[] HeapData = new byte[]
         {
             0xa6, 0x01, 0xec, 0xbc, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xb5, 0x02, 0x06, 0x00,
             0x40, 0x00, 0x00, 0x00, 0x34, 0x0e, 0x02, 0x01, 0xa0, 0x00, 0x00, 0x00, 0x38, 0x0e, 0x03, 0x00,
@@ -46,7 +46,7 @@ namespace Pst.Tests
         [Test]
         public void Heap_Gives_Correct_Client_Signature()
         {
-            var block = Block.Create(_heapData);
+            var block = Block.Create(HeapData);
             var heap = new Heap(block);
 
             Assert.AreEqual(0xbc, heap.ClientSignature);
@@ -55,7 +55,7 @@ namespace Pst.Tests
         [Test]
         public void Heap_Gives_Correct_User_Root()
         {
-            var block = Block.Create(_heapData);
+            var block = Block.Create(HeapData);
             var heap = new Heap(block);
 
             Assert.AreEqual(0x20, heap.UserRoot);
@@ -64,7 +64,7 @@ namespace Pst.Tests
         [Test]
         public void Heap_Gives_Correct_Allocated_Count()
         {
-            var block = Block.Create(_heapData);
+            var block = Block.Create(HeapData);
             var heap = new Heap(block);
 
             Assert.AreEqual(13, heap.AllocatedCount);
@@ -73,7 +73,7 @@ namespace Pst.Tests
         [Test]
         public void Heap_Gives_Correct_Freed_Count()
         {
-            var block = Block.Create(_heapData);
+            var block = Block.Create(HeapData);
             var heap = new Heap(block);
 
             Assert.AreEqual(0, heap.FreedCount);
@@ -87,7 +87,7 @@ namespace Pst.Tests
                 0xb5, 0x02, 0x06, 0x00,
                 0x40, 0x00, 0x00, 0x00
             };
-            var block = Block.Create(_heapData);
+            var block = Block.Create(HeapData);
             var heap = new Heap(block);
 
             var item = heap[0x20];
