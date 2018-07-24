@@ -1,17 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using Pst.Extensions;
 
 namespace Pst.Internal.Ndb
 {
     internal class BTreeReader<T>
-        where T : BTreeNode, new()
+        where T : class
     {
         private const int MetaDataOffset = 488;
         private const int TrailerOffset = 496;
 
         private readonly Stream _input;
         private readonly long _rootOffset;
+        private readonly Func<Segment<byte>, T> _factory;
         private readonly byte[] _buffer = new byte[512];
 
         private int _entries;
@@ -20,10 +22,11 @@ namespace Pst.Internal.Ndb
         private int _currentLevel;
         private PageTrailer _trailer;
 
-        internal BTreeReader(Stream input, long offset)
+        internal BTreeReader(Stream input, long offset, Func<Segment<byte>, T> factory)
         {
             _input = input;
             _rootOffset = offset;
+            _factory = factory;
         }
 
         internal T Find(ulong key)
@@ -52,10 +55,8 @@ namespace Pst.Internal.Ndb
 
         private T CreateNode(int index)
         {
-            var bytes = new byte[_entrySize];
-            Buffer.BlockCopy(_buffer, index * _entrySize, bytes, 0, _entrySize);
-            var node = new T();
-            node.Create(bytes);
+            var segment = _buffer.Segment(index * _entrySize, _entrySize);
+            var node = _factory(segment);
             return node;
         }
 

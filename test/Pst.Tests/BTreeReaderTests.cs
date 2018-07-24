@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Pst.Internal.Ndb;
 
 namespace Pst.Tests
@@ -10,7 +10,7 @@ namespace Pst.Tests
         public void Finds_NBT_Node()
         {
             var stream = TestHelper.GetTestDataStream("nbt.bin");
-            var reader = new BTreeReader<NbtEntry>(stream, 0);
+            var reader = new BTreeReader<NbtEntry>(stream, 0, seg => new NbtEntry(seg));
 
             var node = reader.Find(3);
 
@@ -25,7 +25,7 @@ namespace Pst.Tests
         public void Nonexistent_NBT_Node_Returns_Null()
         {
             var stream = TestHelper.GetTestDataStream("nbt.bin");
-            var reader = new BTreeReader<NbtEntry>(stream, 0);
+            var reader = new BTreeReader<NbtEntry>(stream, 0, seg => new NbtEntry(seg));
 
             var node = reader.Find(6);
 
@@ -36,7 +36,7 @@ namespace Pst.Tests
         public void Finds_BBT_Node()
         {
             var stream = TestHelper.GetTestDataStream("bbt.bin");
-            var reader = new BTreeReader<BbtEntry>(stream, 0);
+            var reader = new BTreeReader<BbtEntry>(stream, 0, seg => new BbtEntry(seg));
 
             var node = reader.Find(3);
 
@@ -50,7 +50,7 @@ namespace Pst.Tests
         public void Nonexistent_BBT_Node_Returns_Null()
         {
             var stream = TestHelper.GetTestDataStream("bbt.bin");
-            var reader = new BTreeReader<BbtEntry>(stream, 0);
+            var reader = new BTreeReader<BbtEntry>(stream, 0, seg => new BbtEntry(seg));
 
             var node = reader.Find(6);
 

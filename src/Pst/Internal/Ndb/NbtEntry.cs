@@ -1,20 +1,22 @@
-﻿using System;
-
 namespace Pst.Internal.Ndb
 {
-    internal class NbtEntry : BTreeNode
+    internal class NbtEntry
     {
+        public NbtEntry()
+        {
+        }
+
+        public NbtEntry(Segment<byte> data)
+        {
+            Nid = data.ToUInt32(0);
+            DataBid = data.ToUInt64(8);
+            SubnodeBid = data.ToUInt64(16);
+            ParentNid = data.ToUInt32(24);
+        }
+
         internal Nid Nid { get; set; }
         internal ulong DataBid { get; set; }
         internal ulong SubnodeBid { get; set; }
         internal Nid ParentNid { get; set; }
-
-        internal override void Create(byte[] data)
-        {
-            Nid = BitConverter.ToUInt32(data, 0);
-            DataBid = BitConverter.ToUInt64(data, 8);
-            SubnodeBid = BitConverter.ToUInt64(data, 16);
-            ParentNid = BitConverter.ToUInt32(data, 24);
-        }
     }
 }

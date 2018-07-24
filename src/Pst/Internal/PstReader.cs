@@ -83,8 +83,8 @@ namespace Pst.Internal
                 BitConverter.ToUInt64(buffer, RootOffset + 52),
                 BitConverter.ToUInt64(buffer, RootOffset + 60));
 
-            _nbtReader = new BTreeReader<NbtEntry>(Stream, (long)nbt.Ib);
-            _bbtReader = new BTreeReader<BbtEntry>(Stream, (long)bbt.Ib);
+            _nbtReader = new BTreeReader<NbtEntry>(Stream, (long)nbt.Ib, seg => new NbtEntry(seg));
+            _bbtReader = new BTreeReader<BbtEntry>(Stream, (long)bbt.Ib, seg => new BbtEntry(seg));
 
             _cryptMethod = (CryptMethod)buffer[CryptMethodOffset];
         }

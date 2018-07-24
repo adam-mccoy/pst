@@ -1,6 +1,6 @@
 namespace Pst.Internal.Ndb
 {
-    internal class Bref
+    internal struct Bref
     {
         public Bref(ulong bid, ulong ib)
         {
