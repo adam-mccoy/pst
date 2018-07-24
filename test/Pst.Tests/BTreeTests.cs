@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using Moq;
 using NUnit.Framework;
+using Pst.Internal;
 using Pst.Internal.Ltp;
 using Pst.Internal.Ndb;
 
@@ -49,7 +51,9 @@ namespace Pst.Tests
         public void Validates_Header()
         {
             var block = Block.Create(HeapData);
-            var heap = new Heap(block);
+            var reader = new Mock<IPstReader>();
+            reader.Setup(r => r.FindBlock(0x04)).Returns(block);
+            var heap = new Heap(new Node(0x0102, 0x04, 0x00, reader.Object), reader.Object);
             new BTree<ulong, ushort>(heap, null, null);
         }
 
@@ -57,7 +61,9 @@ namespace Pst.Tests
         public void Find_Nonexistent_Element_Returns_Null()
         {
             var block = Block.Create(HeapData);
-            var heap = new Heap(block);
+            var reader = new Mock<IPstReader>();
+            reader.Setup(r => r.FindBlock(0x04)).Returns(block);
+            var heap = new Heap(new Node(0x0102, 0x04, 0x00, reader.Object), reader.Object);
             var btree = new BTree<byte[], ushort>(
                 heap,
                 b => BitConverter.ToUInt16(b.Array, b.Offset),
@@ -77,7 +83,9 @@ namespace Pst.Tests
             };
 
             var block = Block.Create(HeapData);
-            var heap = new Heap(block);
+            var reader = new Mock<IPstReader>();
+            reader.Setup(r => r.FindBlock(0x04)).Returns(block);
+            var heap = new Heap(new Node(0x0102, 0x04, 0x00, reader.Object), reader.Object);
             var btree = new BTree<byte[], ushort>(
                 heap,
                 b => BitConverter.ToUInt16(b.Array, b.Offset),
@@ -92,7 +100,9 @@ namespace Pst.Tests
         public void Gets_All_Elements()
         {
             var block = Block.Create(HeapData);
-            var heap = new Heap(block);
+            var reader = new Mock<IPstReader>();
+            reader.Setup(r => r.FindBlock(0x04)).Returns(block);
+            var heap = new Heap(new Node(0x0102, 0x04,0x00, reader.Object), reader.Object);
             var btree = new BTree<byte[], ushort>(
                 heap,
                 b => BitConverter.ToUInt16(b.Array, b.Offset),

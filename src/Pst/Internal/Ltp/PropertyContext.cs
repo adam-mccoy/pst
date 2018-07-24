@@ -7,16 +7,14 @@ namespace Pst.Internal.Ltp
     internal class PropertyContext
     {
         private readonly Node _node;
+        private readonly IPstReader _reader;
         private Heap _heap;
         private BTree<Property, ushort> _bTree;
-        private IPstReader _pstReader;
 
-        internal PropertyContext(
-            Node node,
-            IPstReader reader)
+        internal PropertyContext(Node node, IPstReader reader)
         {
             _node = node;
-            _pstReader = reader;
+            _reader = reader;
             Initialize();
         }
 
@@ -43,8 +41,7 @@ namespace Pst.Internal.Ltp
 
         private void Initialize()
         {
-            var block = _node.GetDataBlock();
-            _heap = new Heap(block);
+            _heap = new Heap(_node, _reader);
             _bTree = new BTree<Property, ushort>(
                 _heap,
                 b => b.ToUInt16(),

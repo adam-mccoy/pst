@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Pst.Internal.Ndb;
 using Pst.Extensions;
 
@@ -6,35 +7,63 @@ namespace Pst.Internal.Ltp
 {
     internal class Heap
     {
-        private readonly ushort _mapOffset;
-        private readonly Block _block;
-        private readonly ushort[] _allocations;
+        private readonly List<HeapPage> _pages = new List<HeapPage>();
+        private readonly Node _node;
+        private readonly IPstReader _reader;
 
-        public Heap(Block block)
+        public Heap(Node node, IPstReader reader)
         {
-            _block = block;
-            _mapOffset = BitConverter.ToUInt16(_block.Data, 0);
-
-            _allocations = new ushort[AllocatedCount + 1];
-            for (var i = 0; i < AllocatedCount + 1; i++)
-                _allocations[i] = BitConverter.ToUInt16(_block.Data, _mapOffset + 4 + i * 2);
+            _node = node;
+            _reader = reader;
+            Initialize();
         }
 
-        internal byte ClientSignature => _block.Data[3];
+        internal byte ClientSignature { get; private set; }
 
-        internal uint UserRoot => BitConverter.ToUInt32(_block.Data, 4);
+        internal Hid UserRoot { get; private set; }
 
-        internal int AllocatedCount => BitConverter.ToUInt16(_block.Data, _mapOffset);
-
-        internal int FreedCount => BitConverter.ToUInt16(_block.Data, _mapOffset + 2);
-
-        internal Segment<byte> this[uint hid]
+        internal Segment<byte> this[Hid hid]
         {
             get
             {
-                var i = (hid >> 5) - 1;
-                var offset = _allocations[i];
-                return _block.Data.Segment(offset, _allocations[i + 1] - offset);
+                var page = _pages[hid.BlockIndex];
+                return page[hid.Index - 1];
+            }
+        }
+
+        private void Initialize()
+        {
+            var block = _reader.FindBlock(_node.DataBid);
+
+            if (_node.DataBid.Type == BlockType.Internal)
+            {
+                BuildDataTreePages(block);
+                ClientSignature = _pages[0].Data[3];
+                UserRoot = _pages[0].Data.Derive(4, 4).ToUInt32();
+            }
+            else
+            {
+                _pages.Add(new HeapPage(block.Data));
+                ClientSignature = block.Data[3];
+                UserRoot = block.Data.Segment(4, 4).ToUInt32();
+            }
+        }
+
+        private void BuildDataTreePages(Block block)
+        {
+            var level = block.Data[1];
+            if (level != 0x01 && level != 0x02)
+                throw new Exception("Invalid level");
+
+            var numEntities = block.Data.Segment(2, 2).ToUInt16();
+            for (var i = 0; i < numEntities; i++)
+            {
+                var bid = new Bid(block.Data.Segment(8 + i * 8, 8).ToUInt64());
+                var innerBlock = _reader.FindBlock(bid);
+                if (level == 0x02)
+                    BuildDataTreePages(innerBlock);
+                else
+                    _pages.Add(new HeapPage(innerBlock.Data));
             }
         }
     }

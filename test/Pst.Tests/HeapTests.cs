@@ -1,4 +1,6 @@
+using Moq;
 using NUnit.Framework;
+using Pst.Internal;
 using Pst.Internal.Ltp;
 using Pst.Internal.Ndb;
 
@@ -47,7 +49,9 @@ namespace Pst.Tests
         public void Heap_Gives_Correct_Client_Signature()
         {
             var block = Block.Create(HeapData);
-            var heap = new Heap(block);
+            var reader = new Mock<IPstReader>();
+            reader.Setup(r => r.FindBlock(0x04)).Returns(block);
+            var heap = new Heap(new Node(0x0102, 0x04, 0x00, reader.Object), reader.Object);
 
             Assert.AreEqual(0xbc, heap.ClientSignature);
         }
@@ -56,27 +60,11 @@ namespace Pst.Tests
         public void Heap_Gives_Correct_User_Root()
         {
             var block = Block.Create(HeapData);
-            var heap = new Heap(block);
+            var reader = new Mock<IPstReader>();
+            reader.Setup(r => r.FindBlock(0x04)).Returns(block);
+            var heap = new Heap(new Node(0x0102, 0x04, 0x00, reader.Object), reader.Object);
 
-            Assert.AreEqual(0x20, heap.UserRoot);
-        }
-
-        [Test]
-        public void Heap_Gives_Correct_Allocated_Count()
-        {
-            var block = Block.Create(HeapData);
-            var heap = new Heap(block);
-
-            Assert.AreEqual(13, heap.AllocatedCount);
-        }
-
-        [Test]
-        public void Heap_Gives_Correct_Freed_Count()
-        {
-            var block = Block.Create(HeapData);
-            var heap = new Heap(block);
-
-            Assert.AreEqual(0, heap.FreedCount);
+            Assert.AreEqual(new Hid(0x20), heap.UserRoot);
         }
 
         [Test]
@@ -88,7 +76,9 @@ namespace Pst.Tests
                 0x40, 0x00, 0x00, 0x00
             };
             var block = Block.Create(HeapData);
-            var heap = new Heap(block);
+            var reader = new Mock<IPstReader>();
+            reader.Setup(r => r.FindBlock(0x04)).Returns(block);
+            var heap = new Heap(new Node(0x0102, 0x04, 0x00, reader.Object), reader.Object);
 
             var item = heap[0x20];
 

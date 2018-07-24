@@ -8,7 +8,6 @@ namespace Pst.Internal.Ltp
     {
         private readonly Node _node;
         private readonly IPstReader _reader;
-
         private Heap _heap;
         private int _numColumns;
         private TcColumnDef[] _columnDefs;
@@ -16,9 +15,7 @@ namespace Pst.Internal.Ltp
         private BTree<uint, uint> _rowIndex;
         private Segment<byte> _rowData;
 
-        internal TableContext(
-            Node node,
-            IPstReader reader)
+        internal TableContext(Node node, IPstReader reader)
         {
             _node = node;
             _reader = reader;
@@ -34,7 +31,7 @@ namespace Pst.Internal.Ltp
                 var rowCount = _rowIndex.GetAll().Count();
                 var rows = Enumerable.Range(0, rowCount).Select(i =>
                 {
-                    return new TcRow(i, _columnOffsets, _columnDefs, _rowData, _heap, _node, _reader);
+                    return new TcRow(i, _columnOffsets, _columnDefs, _rowData, _heap, _node);
                 });
 
                 return rows.ToArray();
@@ -53,8 +50,7 @@ namespace Pst.Internal.Ltp
 
         private void Initialize()
         {
-            var block = _reader.FindBlock(_node.DataBid);
-            _heap = new Heap(block);
+            _heap = new Heap(_node, _reader);
             var tableHeader = _heap[_heap.UserRoot];
             _numColumns = tableHeader[1];
             _columnOffsets = new TcColumnOffsets(

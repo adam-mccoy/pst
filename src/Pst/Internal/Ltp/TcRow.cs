@@ -12,7 +12,6 @@ namespace Pst.Internal.Ltp
         private readonly Segment<byte> _rowData;
         private readonly Heap _heap;
         private readonly Node _node;
-        private readonly IPstReader _reader;
 
         internal TcRow(
             int rowIndex,
@@ -20,8 +19,7 @@ namespace Pst.Internal.Ltp
             TcColumnDef[] columnDefs,
             Segment<byte> rowData,
             Heap heap,
-            Node node,
-            IPstReader reader)
+            Node node)
         {
             _rowIndex = rowIndex;
             _offsets = offsets;
@@ -29,7 +27,6 @@ namespace Pst.Internal.Ltp
             _rowData = rowData;
             _heap = heap;
             _node = node;
-            _reader = reader;
         }
 
         internal Segment<byte>? GetCell(PropertyKey key)

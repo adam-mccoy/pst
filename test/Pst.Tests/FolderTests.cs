@@ -196,16 +196,16 @@ namespace Pst.Tests
         {
             var reader = new Mock<IPstReader>();
             reader.Setup(r => r.FindNode(0x62))
-                  .Returns(new Node(0x62, 0x02, 0x00, reader.Object));
-            reader.Setup(r => r.FindBlock(0x02))
+                  .Returns(new Node(0x62, 0x04, 0x00, reader.Object));
+            reader.Setup(r => r.FindBlock(0x04))
                   .Returns(Block.Create(FolderBlock));
             reader.Setup(r => r.FindNode(0x6e))
-                  .Returns(new Node(0x6e, 0x03, 0x22, reader.Object));
-            reader.Setup(r => r.FindBlock(0x03))
+                  .Returns(new Node(0x6e, 0x0c, 0x14, reader.Object));
+            reader.Setup(r => r.FindBlock(0x0c))
                   .Returns(Block.Create(FolderContentTableBlock));
-            reader.Setup(r => r.FindBlock(0x22))
+            reader.Setup(r => r.FindBlock(0x14))
                   .Returns(Block.Create(FolderContentSubnodeTree));
-            reader.Setup(r => r.FindBlock(0x04))
+            reader.Setup(r => r.FindBlock(0x1c))
                   .Returns(Block.Create(FolderContentSubnodeBlock));
 
             var folder = new Folder(0x62, reader.Object);
