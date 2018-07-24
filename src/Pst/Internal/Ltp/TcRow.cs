@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using Pst.Internal.Ndb;
 
@@ -58,8 +59,8 @@ namespace Pst.Internal.Ltp
                 else
                 {
                     var subnode = _node.FindSubnode(hnid);
-                    var subBlock = subnode.GetDataBlock();
-                    data = subBlock.Data;
+                    var subStream = subnode.GetDataStream();
+                    data = new BinaryReader(subStream).ReadBytes((int)subStream.Length);
                 }
             }
 

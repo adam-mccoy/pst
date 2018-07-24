@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using Pst.Internal.Ndb;
 
@@ -77,8 +78,8 @@ namespace Pst.Internal.Ltp
             else
             {
                 var subnode = _node.FindSubnode(rowDataHnid);
-                var dataBlock = _reader.FindBlock(subnode.DataBid);
-                _rowData = dataBlock.Data;
+                var dataStream = subnode.GetDataStream();
+                _rowData = new BinaryReader(dataStream).ReadBytes((int)dataStream.Length);
             }
 
             _columnDefs = new TcColumnDef[_numColumns];

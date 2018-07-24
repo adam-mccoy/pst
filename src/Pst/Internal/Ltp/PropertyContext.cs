@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Pst.Internal.Ndb;
 
 namespace Pst.Internal.Ltp
@@ -29,7 +30,9 @@ namespace Pst.Internal.Ltp
             {
                 if ((prop.Hnid & 0x1f) == 0)
                     return _heap[prop.Hnid];
-                return _node.FindSubnode(prop.Hnid).GetDataBlock().Data;
+                var subnode = _node.FindSubnode(prop.Hnid);
+                var dataStream = subnode.GetDataStream();
+                return new BinaryReader(dataStream).ReadBytes((int)dataStream.Length);
             }
 
             if (prop.Type.GetLength() <= 4)

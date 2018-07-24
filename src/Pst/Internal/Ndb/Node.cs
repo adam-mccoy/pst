@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace Pst.Internal.Ndb
 {
@@ -24,7 +25,7 @@ namespace Pst.Internal.Ndb
         internal ulong DataBid { get; private set; }
         internal ulong SubnodeBid { get; private set; }
 
-        internal Block GetDataBlock() => _reader.FindBlock(DataBid);
+        internal Stream GetDataStream() => new NodeDataStream(DataBid, _reader);
 
         internal Node FindSubnode(Nid subnodeNid)
         {

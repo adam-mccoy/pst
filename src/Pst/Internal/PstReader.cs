@@ -33,6 +33,8 @@ namespace Pst.Internal
 
         internal Stream Stream { get; }
 
+        public BbtEntry LookupBlock(Bid bid) => _bbtReader.Find(bid);
+
         public Block FindBlock(Bid bid)
         {
             var entry = _bbtReader.Find(bid);
