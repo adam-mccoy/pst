@@ -10,7 +10,7 @@ namespace Pst.Internal.Ndb
         private readonly IPstReader _reader;
         private readonly SubnodeReader _subnodeReader;
 
-        internal Node(Nid nid, ulong dataBid, ulong subnodeBid, IPstReader reader)
+        internal Node(Nid nid, Bid dataBid, Bid subnodeBid, IPstReader reader)
         {
             Nid = nid;
             DataBid = dataBid;
@@ -22,8 +22,8 @@ namespace Pst.Internal.Ndb
         }
 
         internal Nid Nid { get; private set; }
-        internal ulong DataBid { get; private set; }
-        internal ulong SubnodeBid { get; private set; }
+        internal Bid DataBid { get; private set; }
+        internal Bid SubnodeBid { get; private set; }
 
         internal Stream GetDataStream() => new NodeDataStream(DataBid, _reader);
 

@@ -4,10 +4,11 @@ namespace Pst.Internal.Ndb
 {
     internal class SubnodeReader
     {
-        private ulong _bid;
+        private readonly Bid _bid;
+
         private IPstReader _reader;
 
-        internal SubnodeReader(ulong bid, IPstReader reader)
+        internal SubnodeReader(Bid bid, IPstReader reader)
         {
             _bid = bid;
             _reader = reader;

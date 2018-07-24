@@ -13,11 +13,11 @@ namespace Pst.Internal.Ltp
         private int _valueSize;
         private int _elementSize;
         private int _indexLevels;
-        private uint _rootHid;
+        private Hid _rootHid;
 
         internal BTree(
             Heap heap,
-            uint headerHid,
+            Hid headerHid,
             Func<Segment<byte>, TKey> keyFactory,
             Func<Segment<byte>, T> valueFactory)
         {
