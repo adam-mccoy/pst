@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Pst.Internal;
 using Pst.Internal.Ltp;
 using Pst.Internal.Ndb;
@@ -47,7 +48,7 @@ namespace Pst
             get
             {
                 var index = _contents.Value.Index;
-                var messages = new Message[index.Length];
+                var messages = index.Select(i => new Message(i.RowKey, _pstReader)).ToList();
                 return messages;
             }
         }

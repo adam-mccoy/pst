@@ -1,4 +1,4 @@
-﻿namespace Pst
+namespace Pst
 {
     public enum PropertyKey : ushort
     {
@@ -13,6 +13,8 @@
         Hidden = 0x10f4,
 
         LtpRowId = 0x67f2,
-        LtpRowVer = 0x67f3
+        LtpRowVer = 0x67f3,
+
+        Subject = 0x0037
     }
 }

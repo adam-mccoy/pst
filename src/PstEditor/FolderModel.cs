@@ -26,5 +26,7 @@ namespace PstEditor
                 return null;
             }
         }
+
+        public ObservableCollection<MessageModel> Messages => new ObservableCollection<MessageModel>(_folder.Messages.Select(m => new MessageModel(m)));
     }
 }
