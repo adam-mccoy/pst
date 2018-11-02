@@ -67,15 +67,18 @@ namespace Pst.Internal.Ltp
                 s => s.ToUInt32(4));
 
             var rowDataHnid = tableHeader.ToUInt32(14);
-            if ((rowDataHnid & 0x1f) == 0)
+            if (rowDataHnid != 0)
             {
-                _rowData = _heap[rowDataHnid];
-            }
-            else
-            {
-                var subnode = _node.FindSubnode(rowDataHnid);
-                var dataStream = subnode.GetDataStream();
-                _rowData = new BinaryReader(dataStream).ReadBytes((int)dataStream.Length);
+                if ((rowDataHnid & 0x1f) == 0)
+                {
+                    _rowData = _heap[rowDataHnid];
+                }
+                else
+                {
+                    var subnode = _node.FindSubnode(rowDataHnid);
+                    var dataStream = subnode.GetDataStream();
+                    _rowData = new BinaryReader(dataStream).ReadBytes((int)dataStream.Length);
+                }
             }
 
             _columnDefs = new TcColumnDef[_numColumns];

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Pst.Internal.Ltp
 {
@@ -38,6 +39,9 @@ namespace Pst.Internal.Ltp
 
         internal T Find(TKey key)
         {
+            if (_rootHid == Hid.Zero)
+                return default(T);
+
             var root = Heap[_rootHid];
             var keys = ReadKeys(root);
             var keyIndex = Array.BinarySearch(keys, key);
@@ -51,6 +55,9 @@ namespace Pst.Internal.Ltp
 
         internal IEnumerable<KeyValuePair<TKey, T>> GetAll()
         {
+            if (_rootHid == Hid.Zero)
+                return Enumerable.Empty<KeyValuePair<TKey, T>>();
+
             var root = Heap[_rootHid];
             var itemCount = root.Count / _elementSize;
             var items = new KeyValuePair<TKey, T>[itemCount];
