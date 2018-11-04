@@ -53,15 +53,8 @@ namespace Pst.Internal.Ltp
             if (_rootHid == Hid.Zero)
                 return Enumerable.Empty<KeyValuePair<TKey, T>>();
 
-            var root = Heap[_rootHid];
-            var itemCount = root.Count / ElementLength;
-            var items = new KeyValuePair<TKey, T>[itemCount];
-            for (var i = 0; i < itemCount; i++)
-            {
-                var key = _keyFactory(root.Derive(i * ElementLength, _keyLength));
-                var value = _valueFactory(root.Derive(i * ElementLength, ElementLength));
-                items[i] = new KeyValuePair<TKey, T>(key, value);
-            }
+            var items = new List<KeyValuePair<TKey, T>>();
+            GetAllInternal(items, Heap[_rootHid], _indexLevels);
             return items;
         }
 
@@ -84,6 +77,27 @@ namespace Pst.Internal.Ltp
 
                 var nextLevel = Heap[heapItem.Derive(keyIndex * IntermediateLength + _keyLength, 4).ToUInt32()];
                 return FindInternal(key, nextLevel, level - 1);
+            }
+        }
+
+        private void GetAllInternal(List<KeyValuePair<TKey, T>> items, Segment<byte> heapItem, int level)
+        {
+            var recordLength = level == 0 ? ElementLength : IntermediateLength;
+            var itemCount = heapItem.Count / recordLength;
+            for (var i = 0; i < itemCount; i++)
+            {
+                var key = _keyFactory(heapItem.Derive(i * recordLength, _keyLength));
+
+                if (level == 0)
+                {
+                    var value = _valueFactory(heapItem.Derive(i * ElementLength, ElementLength));
+                    items.Add(new KeyValuePair<TKey, T>(key, value));
+                }
+                else
+                {
+                    var value = heapItem.Derive(i * IntermediateLength + _keyLength, 4);
+                    GetAllInternal(items, Heap[value.ToUInt32()], level - 1);
+                }
             }
         }
 
