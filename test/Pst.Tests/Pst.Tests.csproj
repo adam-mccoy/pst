@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp20</TargetFramework>
@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="TestData\bbt.bin" />
+    <EmbeddedResource Include="TestData\BTree\MultiLevel.bin" />
+    <EmbeddedResource Include="TestData\BTree\SingleLevel.bin" />
     <EmbeddedResource Include="TestData\nbt.bin" />
     <EmbeddedResource Include="TestData\test.pst" />
   </ItemGroup>
