@@ -10,9 +10,8 @@ namespace Pst.Internal.Ltp
         private readonly Func<Segment<byte>, TKey> _keyFactory;
         private readonly Func<Segment<byte>, T> _valueFactory;
 
-        private int _keySize;
-        private int _valueSize;
-        private int _elementSize;
+        private int _keyLength;
+        private int _valueLength;
         private int _indexLevels;
         private Hid _rootHid;
 
@@ -37,21 +36,17 @@ namespace Pst.Internal.Ltp
         {
         }
 
+        internal Heap Heap { get; }
+        private int ElementLength => _keyLength + _valueLength;
+        private int IntermediateLength => _keyLength + 4;
+
         internal T Find(TKey key)
         {
             if (_rootHid == Hid.Zero)
                 return default(T);
 
-            var root = Heap[_rootHid];
-            var keys = ReadKeys(root);
-            var keyIndex = Array.BinarySearch(keys, key);
-            if (keyIndex < 0)
-                return default(T);
-
-            return _valueFactory(root.Derive(keyIndex * _elementSize, _elementSize));
+            return FindInternal(key, Heap[_rootHid], _indexLevels);
         }
-
-        internal Heap Heap { get; }
 
         internal IEnumerable<KeyValuePair<TKey, T>> GetAll()
         {
@@ -59,23 +54,45 @@ namespace Pst.Internal.Ltp
                 return Enumerable.Empty<KeyValuePair<TKey, T>>();
 
             var root = Heap[_rootHid];
-            var itemCount = root.Count / _elementSize;
+            var itemCount = root.Count / ElementLength;
             var items = new KeyValuePair<TKey, T>[itemCount];
             for (var i = 0; i < itemCount; i++)
             {
-                var key = _keyFactory(root.Derive(i * _elementSize, _keySize));
-                var value = _valueFactory(root.Derive(i * _elementSize, _elementSize));
+                var key = _keyFactory(root.Derive(i * ElementLength, _keyLength));
+                var value = _valueFactory(root.Derive(i * ElementLength, ElementLength));
                 items[i] = new KeyValuePair<TKey, T>(key, value);
             }
             return items;
         }
 
-        private TKey[] ReadKeys(Segment<byte> data)
+        private T FindInternal(TKey key, Segment<byte> heapItem, int level)
         {
-            var keyCount = data.Count / _elementSize;
+            var keys = ReadKeys(heapItem, level == 0 ? ElementLength : IntermediateLength);
+            var keyIndex = Array.BinarySearch(keys, key);
+
+            if (level == 0)
+            {
+                if (keyIndex < 0)
+                    return default(T);
+
+                return _valueFactory(heapItem.Derive(keyIndex * ElementLength, ElementLength));
+            }
+            else
+            {
+                if (keyIndex < 0)
+                    keyIndex = ~keyIndex - 1;
+
+                var nextLevel = Heap[heapItem.Derive(keyIndex * IntermediateLength + _keyLength, 4).ToUInt32()];
+                return FindInternal(key, nextLevel, level - 1);
+            }
+        }
+
+        private TKey[] ReadKeys(Segment<byte> data, int recordLength)
+        {
+            var keyCount = data.Count / recordLength;
             var keys = new TKey[keyCount];
             for (var i = 0; i < keyCount; i++)
-                keys[i] = _keyFactory(data.Derive(i * _elementSize, _keySize));
+                keys[i] = _keyFactory(data.Derive(i * recordLength, _keyLength));
             return keys;
         }
 
@@ -83,9 +100,8 @@ namespace Pst.Internal.Ltp
         {
             var header = Heap[_headerHid];
             Validate.Match(header[0], 0xb5, "Invalid type");
-            _keySize = header[1];
-            _valueSize = header[2];
-            _elementSize = _keySize + _valueSize;
+            _keyLength = header[1];
+            _valueLength = header[2];
             _indexLevels = header[3];
             _rootHid = header.ToUInt32(4);
         }
