@@ -69,7 +69,7 @@ namespace Pst.Tests
             var expectedBytes = new byte[]
             {
                 0xe5, 0x35, 0x02, 0x01,
-                0x60, 0x01, 0x00, 0x00
+                0xa0, 0x01, 0x00, 0x00
             };
 
             var block = Block.Create(MultiLevel);
@@ -131,7 +131,7 @@ namespace Pst.Tests
             var item1 = items.ElementAt(0);
             Assert.AreEqual(0xe34, item1.Key);
             CollectionAssert.AreEqual(
-                new byte[] { 0x34, 0x0e, 0x02, 0x01, 0xa0, 0x00, 0x00, 0x00 },
+                new byte[] { 0x34, 0x0e, 0x02, 0x01, 0xe0, 0x00, 0x00, 0x00 },
                 item1.Value);
             var item6 = items.ElementAt(5);
             Assert.AreEqual(0x35df, item6.Key);
