@@ -18,5 +18,6 @@ namespace Pst.Internal
         public static uint ToUInt32(this Segment<byte> segment, int offset) => BitConverter.ToUInt32(segment.Array, segment.Offset + offset);
         public static ulong ToUInt64(this Segment<byte> segment) => BitConverter.ToUInt64(segment.Array, segment.Offset);
         public static ulong ToUInt64(this Segment<byte> segment, int offset) => BitConverter.ToUInt64(segment.Array, segment.Offset + offset);
+        public static string ToString(this Segment<byte> segment, IPstReader reader) => reader.DecodeString(segment);
     }
 }
