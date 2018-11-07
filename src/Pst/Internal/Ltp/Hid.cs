@@ -29,7 +29,7 @@ namespace Pst.Internal.Ltp
             get
             {
                 Validate();
-                return (int)(_value >> 5 & 0x1f);
+                return (int)(_value >> 5 & 0x7ff);
             }
         }
 
