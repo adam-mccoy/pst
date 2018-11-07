@@ -23,10 +23,10 @@ namespace Pst
             Initialize();
         }
 
-        public string Name => _pstReader.DecodeString(_properties.Get(PropertyKey.DisplayName));
-        public int ItemCount => _properties.Get(PropertyKey.ContentCount).ToInt32();
-        public int UnreadCount => _properties.Get(PropertyKey.UnreadCount).ToInt32();
-        public bool HasSubfolders => _properties.Get(PropertyKey.Subfolders).ToBoolean();
+        public string Name => _properties.Get(PropertyKey.DisplayName)?.ToString(_pstReader);
+        public int ItemCount => _properties.Get(PropertyKey.ContentCount)?.ToInt32() ?? 0;
+        public int UnreadCount => _properties.Get(PropertyKey.UnreadCount)?.ToInt32() ?? 0;
+        public bool HasSubfolders => _properties.Get(PropertyKey.Subfolders)?.ToBoolean() ?? false;
 
         public ICollection<Folder> Folders
         {

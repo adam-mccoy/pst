@@ -18,9 +18,9 @@ namespace Pst
             Initialize();
         }
 
-        public byte[] RecordKey => _context.Get(PropertyKey.RecordKey).ToArray();
+        public byte[] RecordKey => _context.Get(PropertyKey.RecordKey)?.ToArray();
 
-        public string DisplayName => _pstReader.DecodeString(_context.Get(PropertyKey.DisplayName));
+        public string DisplayName => _context.Get(PropertyKey.DisplayName)?.ToString(_pstReader);
 
         private Folder _rootFolder;
         public Folder RootFolder
@@ -30,7 +30,7 @@ namespace Pst
                 if (_rootFolder == null)
                 {
                     var prop = _context.Get(PropertyKey.IpmSubTreeEntryId);
-                    Nid nid = prop.Derive(20, 4);
+                    Nid nid = prop.Value.Derive(20, 4);
                     _rootFolder = new Folder(nid, _pstReader);
                 }
                 return _rootFolder;

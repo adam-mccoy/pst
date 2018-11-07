@@ -18,7 +18,7 @@ namespace Pst.Internal.Ltp
             Initialize();
         }
 
-        internal Segment<byte> Get(PropertyKey key)
+        internal Segment<byte>? Get(PropertyKey key)
         {
             var prop = _bTree.Find((ushort)key);
             if (prop == null)

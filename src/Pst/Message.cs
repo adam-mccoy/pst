@@ -18,7 +18,7 @@ namespace Pst
             Initialize();
         }
 
-        public string Subject => _pstReader.DecodeString(_properties.Get(PropertyKey.Subject));
+        public string Subject => _properties.Get(PropertyKey.Subject)?.ToString(_pstReader);
 
         private void Initialize()
         {
