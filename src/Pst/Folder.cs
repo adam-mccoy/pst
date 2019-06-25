@@ -12,21 +12,24 @@ namespace Pst
         private readonly Nid _nid;
         private readonly IPstReader _pstReader;
 
-        private PropertyContext _properties;
-        private Lazy<TableContext> _hierarchy;
-        private Lazy<TableContext> _contents;
+        private readonly Lazy<PropertyContext> _properties;
+        private readonly Lazy<TableContext> _hierarchy;
+        private readonly Lazy<TableContext> _contents;
 
         internal Folder(Nid nid, IPstReader reader)
         {
             _nid = nid;
             _pstReader = reader;
-            Initialize();
+
+            _properties = new Lazy<PropertyContext>(GetPropertyContext);
+            _hierarchy = new Lazy<TableContext>(GetHierarchyTable);
+            _contents = new Lazy<TableContext>(GetContentsTable);
         }
 
-        public string Name => _properties.Get(PropertyKey.DisplayName)?.ToString(_pstReader);
-        public int ItemCount => _properties.Get(PropertyKey.ContentCount)?.ToInt32() ?? 0;
-        public int UnreadCount => _properties.Get(PropertyKey.UnreadCount)?.ToInt32() ?? 0;
-        public bool HasSubfolders => _properties.Get(PropertyKey.Subfolders)?.ToBoolean() ?? false;
+        public string Name => _properties.Value.Get(PropertyKey.DisplayName)?.ToString(_pstReader);
+        public int ItemCount => _properties.Value.Get(PropertyKey.ContentCount)?.ToInt32() ?? 0;
+        public int UnreadCount => _properties.Value.Get(PropertyKey.UnreadCount)?.ToInt32() ?? 0;
+        public bool HasSubfolders => _properties.Value.Get(PropertyKey.Subfolders)?.ToBoolean() ?? false;
 
         public ICollection<Folder> Folders
         {
@@ -65,12 +68,10 @@ namespace Pst
             return new TableContext(ctNode, _pstReader);
         }
 
-        private void Initialize()
+        private PropertyContext GetPropertyContext()
         {
             var node = _pstReader.FindNode(_nid);
-            _properties = new PropertyContext(node, _pstReader);
-            _hierarchy = new Lazy<TableContext>(GetHierarchyTable);
-            _contents = new Lazy<TableContext>(GetContentsTable);
+            return new PropertyContext(node, _pstReader);
         }
     }
 }

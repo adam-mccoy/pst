@@ -1,3 +1,4 @@
+using System;
 using Pst.Internal;
 using Pst.Internal.Ltp;
 using Pst.Internal.Ndb;
@@ -8,22 +9,21 @@ namespace Pst
     {
         private readonly Nid _nid;
         private readonly IPstReader _pstReader;
-
-        private PropertyContext _properties;
+        private readonly Lazy<PropertyContext> _properties;
 
         internal Message(Nid nid, IPstReader reader)
         {
             _nid = nid;
             _pstReader = reader;
-            Initialize();
+            _properties = new Lazy<PropertyContext>(Initialize);
         }
 
-        public string Subject => _properties.Get(PropertyKey.Subject)?.ToString(_pstReader);
+        public string Subject => _properties.Value.Get(PropertyKey.Subject)?.ToString(_pstReader);
 
-        private void Initialize()
+        private PropertyContext Initialize()
         {
             var node = _pstReader.FindNode(_nid);
-            _properties = new PropertyContext(node, _pstReader);
+            return new PropertyContext(node, _pstReader);
         }
     }
 }
