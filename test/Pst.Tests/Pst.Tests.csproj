@@ -8,6 +8,10 @@
     <EmbeddedResource Include="TestData\bbt.bin" />
     <EmbeddedResource Include="TestData\BTree\MultiLevel.bin" />
     <EmbeddedResource Include="TestData\BTree\SingleLevel.bin" />
+    <EmbeddedResource Include="TestData\Folder\ContentsSubnodeData.bin" />
+    <EmbeddedResource Include="TestData\Folder\ContentsSubnodeTree.bin" />
+    <EmbeddedResource Include="TestData\Folder\ContentsTC.bin" />
+    <EmbeddedResource Include="TestData\Folder\FolderPC.bin" />
     <EmbeddedResource Include="TestData\nbt.bin" />
     <EmbeddedResource Include="TestData\test.pst" />
   </ItemGroup>
