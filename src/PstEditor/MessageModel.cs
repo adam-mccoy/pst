@@ -12,5 +12,10 @@ namespace PstEditor
         }
 
         public string Subject => _message.Subject;
+        public MessagePriority Priority => _message.Priority;
+        public MessageImportance Importance => _message.Importance;
+        public string MessageClass => _message.MessageClass;
+        public bool? ReadReceiptsRequested => _message.ReadReceiptRequested;
+        public MessageSensitivity Sensitivity => _message.Sensitivity;
     }
 }

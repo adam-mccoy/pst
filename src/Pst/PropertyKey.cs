@@ -15,6 +15,11 @@ namespace Pst
         LtpRowId = 0x67f2,
         LtpRowVer = 0x67f3,
 
-        Subject = 0x0037
+        Subject = 0x0037,
+        Importance = 0x0017,
+        Priority = 0x0026,
+        MessageClass = 0x001a,
+        ReadReceiptsRequested = 0x0029,
+        Sensitivity = 0x0036
     }
 }
