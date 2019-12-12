@@ -19,6 +19,11 @@ namespace Pst
         }
 
         public string Subject => _properties.Value.Get(PropertyKey.Subject)?.ToString(_pstReader);
+        public MessageImportance Importance => (MessageImportance)_properties.Value.Get(PropertyKey.Importance)?.ToInt32();
+        public MessagePriority Priority => (MessagePriority)_properties.Value.Get(PropertyKey.Priority)?.ToInt32();
+        public string MessageClass => _properties.Value.Get(PropertyKey.MessageClass)?.ToString(_pstReader);
+        public bool? ReadReceiptRequested => _properties.Value.Get(PropertyKey.ReadReceiptsRequested)?.ToBoolean();
+        public MessageSensitivity Sensitivity => (MessageSensitivity)_properties.Value.Get(PropertyKey.Sensitivity)?.ToInt32();
 
         private PropertyContext Initialize()
         {

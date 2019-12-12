@@ -53,7 +53,12 @@
             <ListView x:Name="messages" Grid.Column="2" ItemsSource="{Binding SelectedItem.Messages, ElementName=folderList}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Subject" Width="500" DisplayMemberBinding="{Binding Subject}" />
+                        <GridViewColumn Header="Subject" Width="300" DisplayMemberBinding="{Binding Subject}" />
+                        <GridViewColumn Header="Importance" Width="50" DisplayMemberBinding="{Binding Importance}" />
+                        <GridViewColumn Header="Priority" Width="50" DisplayMemberBinding="{Binding Priority}" />
+                        <GridViewColumn Header="Message Class" Width="50" DisplayMemberBinding="{Binding MessageClass}" />
+                        <GridViewColumn Header="RRR" Width="50" DisplayMemberBinding="{Binding ReadReceiptsRequested}" />
+                        <GridViewColumn Header="Sens." Width="50" DisplayMemberBinding="{Binding Sensitivity}" />
                     </GridView>
                 </ListView.View>
             </ListView>
