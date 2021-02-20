@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Pst\Pst.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties" />
-  </ItemGroup>
-
 </Project>
