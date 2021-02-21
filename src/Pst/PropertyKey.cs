@@ -20,6 +20,9 @@ namespace Pst
         Priority = 0x0026,
         MessageClass = 0x001a,
         ReadReceiptsRequested = 0x0029,
-        Sensitivity = 0x0036
+        Sensitivity = 0x0036,
+
+        RecipientType = 0x0c15,
+        EmailAddress = 0x3003
     }
 }
