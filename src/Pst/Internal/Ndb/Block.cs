@@ -26,10 +26,10 @@ namespace Pst.Internal.Ndb
             if (blockSize % 64 != 0)
                 throw new ArgumentException("Invalid block length.", nameof(data));
 
-            var dataSize = BitConverter.ToUInt16(data, blockSize - 16);
-            var sig = BitConverter.ToUInt16(data, blockSize - 14);
-            var crc = BitConverter.ToUInt32(data, blockSize - 12);
-            var bid = BitConverter.ToUInt64(data, blockSize - 8);
+            var dataSize = data.Slice(blockSize - 16).ToUInt16();
+            var sig = data.Slice(blockSize - 14).ToUInt16();
+            var crc = data.Slice(blockSize - 12).ToUInt32();
+            var bid = data.Slice(blockSize - 8).ToUInt64();
 
             var blockData = new byte[dataSize];
             Buffer.BlockCopy(data, 0, blockData, 0, dataSize);

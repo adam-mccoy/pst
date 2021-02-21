@@ -10,9 +10,9 @@
             Bm = bm;
         }
 
-        internal int Fours { get; private set; }
-        internal int Twos { get; private set; }
-        internal int Ones { get; private set; }
-        internal int Bm { get; private set; }
+        internal int Fours { get; }
+        internal int Twos { get; }
+        internal int Ones { get; }
+        internal int Bm { get; }
     }
 }

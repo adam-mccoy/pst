@@ -1,12 +1,9 @@
-using System;
-
 namespace Pst.Internal.Ndb
 {
     internal class SubnodeReader
     {
         private readonly Bid _bid;
-
-        private IPstReader _reader;
+        private readonly IPstReader _reader;
 
         internal SubnodeReader(Bid bid, IPstReader reader)
         {
@@ -29,26 +26,23 @@ namespace Pst.Internal.Ndb
             }
 
             var slEntry = FindLeafEntry(block, nid);
-            if (slEntry == null)
-                return null;
-
-            return new Node(nid, slEntry.DataBid, slEntry.SubnodeBid, _reader);
+            return slEntry == null ? null : new Node(nid, slEntry.DataBid, slEntry.SubnodeBid, _reader);
         }
 
-        private SlEntry FindLeafEntry(Block block, Nid nid)
+        private static SlEntry FindLeafEntry(Block block, Nid nid)
         {
-            var numEntries = BitConverter.ToUInt16(block.Data, 2);
+            var numEntries = block.Data.Slice(2).ToUInt16();
 
             for (var i = 0; i < numEntries; i++)
             {
-                var entryNid = BitConverter.ToUInt32(block.Data, 8 + i * 24);
+                var entryNid = block.Data.Slice(8 + i * 24).ToUInt32();
                 if (entryNid == nid)
                 {
                     return new SlEntry
                     {
-                        Nid = BitConverter.ToUInt32(block.Data, 8 + i * 24),
-                        DataBid = BitConverter.ToUInt64(block.Data, 16 + i * 24),
-                        SubnodeBid = BitConverter.ToUInt64(block.Data, 24 + i * 24)
+                        Nid = block.Data.Slice(8 + i * 24).ToUInt32(),
+                        DataBid = block.Data.Slice(16 + i * 24).ToUInt64(),
+                        SubnodeBid = block.Data.Slice(24 + i * 24).ToUInt64()
                     };
                 }
             }
@@ -56,19 +50,19 @@ namespace Pst.Internal.Ndb
             return null;
         }
 
-        private SiEntry FindIntermediateEntry(Block block, Nid nid)
+        private static SiEntry FindIntermediateEntry(Block block, Nid nid)
         {
-            var numEntries = BitConverter.ToUInt16(block.Data, 2);
+            var numEntries = block.Data.Slice(2).ToUInt16();
 
             for (var i = 0; i < numEntries; i++)
             {
-                var entryNid = BitConverter.ToUInt32(block.Data, 8 + i * 16);
+                var entryNid = block.Data.Slice(8 + i * 16).ToUInt32();
                 if (entryNid > nid)
                 {
                     return new SiEntry
                     {
-                        Nid = BitConverter.ToUInt32(block.Data, 8 + (i - 1) * 16),
-                        Bid = BitConverter.ToUInt64(block.Data, 16 + (i - 1) * 16)
+                        Nid = block.Data.Slice(8 + (i - 1) * 16).ToUInt32(),
+                        Bid = block.Data.Slice(16 + (i - 1) * 16).ToUInt64()
                     };
                 }
             }

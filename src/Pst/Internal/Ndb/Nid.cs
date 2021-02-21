@@ -6,7 +6,7 @@ namespace Pst.Internal.Ndb
     [DebuggerDisplay("Type: {Type}, Index: {Index}")]
     internal struct Nid
     {
-        private uint _value;
+        private readonly uint _value;
 
         internal Nid(uint value)
         {

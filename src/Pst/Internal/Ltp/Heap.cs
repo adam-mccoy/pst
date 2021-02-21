@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Pst.Internal.Ndb;
-using Pst.Extensions;
 
 namespace Pst.Internal.Ltp
 {
@@ -39,13 +38,13 @@ namespace Pst.Internal.Ltp
             {
                 BuildDataTreePages(block);
                 ClientSignature = _pages[0].Data[3];
-                UserRoot = _pages[0].Data.Derive(4, 4).ToUInt32();
+                UserRoot = _pages[0].Data.Slice(4, 4).ToUInt32();
             }
             else
             {
                 _pages.Add(new HeapPage(block.Data));
                 ClientSignature = block.Data[3];
-                UserRoot = block.Data.Segment(4, 4).ToUInt32();
+                UserRoot = block.Data.Slice(4, 4).ToUInt32();
             }
         }
 
@@ -55,10 +54,10 @@ namespace Pst.Internal.Ltp
             if (level != 0x01 && level != 0x02)
                 throw new Exception("Invalid level");
 
-            var numEntities = block.Data.Segment(2, 2).ToUInt16();
+            var numEntities = block.Data.Slice(2, 2).ToUInt16();
             for (var i = 0; i < numEntities; i++)
             {
-                var bid = new Bid(block.Data.Segment(8 + i * 8, 8).ToUInt64());
+                var bid = new Bid(block.Data.Slice(8 + i * 8, 8).ToUInt64());
                 var innerBlock = _reader.FindBlock(bid);
                 if (level == 0x02)
                     BuildDataTreePages(innerBlock);

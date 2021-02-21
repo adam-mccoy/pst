@@ -48,7 +48,7 @@ namespace Pst.Internal.Ltp
                 CreateProperty);
         }
 
-        private Property CreateProperty(Segment<byte> bytes) => new Property
+        private static Property CreateProperty(Segment<byte> bytes) => new Property
         {
             Key = (PropertyKey)bytes.ToUInt16(),
             Type = (PropertyType)bytes.ToUInt16(2),

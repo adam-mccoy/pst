@@ -14,9 +14,9 @@
             Bid = bid;
         }
 
-        internal PageType Type { get; private set; }
-        internal ushort Signature { get; private set; }
-        internal uint Crc { get; private set; }
-        internal ulong Bid { get; private set; }
+        internal PageType Type { get; }
+        internal ushort Signature { get; }
+        internal uint Crc { get; }
+        internal ulong Bid { get; }
     }
 }

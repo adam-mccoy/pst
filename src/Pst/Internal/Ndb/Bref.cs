@@ -2,14 +2,14 @@ namespace Pst.Internal.Ndb
 {
     internal struct Bref
     {
-        public Bref(ulong bid, ulong ib)
+        public Bref(Bid bid, ulong ib)
         {
             Bid = bid;
             Ib = ib;
         }
 
-        internal ulong Bid { get; private set; }
-        internal ulong Ib { get; private set; }
+        internal Bid Bid { get; }
+        internal ulong Ib { get; }
 
         public override bool Equals(object obj) => obj is Bref bref && Bid == bref.Bid && Ib == bref.Ib;
 

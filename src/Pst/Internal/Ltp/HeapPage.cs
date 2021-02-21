@@ -15,7 +15,7 @@ namespace Pst.Internal.Ltp
         public int FreedCount => Data.ToUInt16(_mapOffset + 2);
 
         public Segment<byte> Data { get; private set; }
-        public Segment<byte> this[int index] => Data.Derive(_allocations[index], _allocations[index + 1] - _allocations[index]);
+        public Segment<byte> this[int index] => Data.Slice(_allocations[index], _allocations[index + 1] - _allocations[index]);
 
         private void Initialize()
         {

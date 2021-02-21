@@ -6,6 +6,7 @@ namespace Pst.Internal.Ltp
 {
     internal class BTree<T, TKey>
     {
+        private readonly Heap _heap;
         private readonly uint _headerHid;
         private readonly Func<Segment<byte>, TKey> _keyFactory;
         private readonly Func<Segment<byte>, T> _valueFactory;
@@ -21,7 +22,7 @@ namespace Pst.Internal.Ltp
             Func<Segment<byte>, TKey> keyFactory,
             Func<Segment<byte>, T> valueFactory)
         {
-            Heap = heap;
+            _heap = heap;
             _headerHid = headerHid;
             _keyFactory = keyFactory;
             _valueFactory = valueFactory;
@@ -36,17 +37,10 @@ namespace Pst.Internal.Ltp
         {
         }
 
-        internal Heap Heap { get; }
         private int ElementLength => _keyLength + _valueLength;
         private int IntermediateLength => _keyLength + 4;
 
-        internal T Find(TKey key)
-        {
-            if (_rootHid == Hid.Zero)
-                return default(T);
-
-            return FindInternal(key, Heap[_rootHid], _indexLevels);
-        }
+        internal T Find(TKey key) => _rootHid == Hid.Zero ? default : FindInternal(key, _heap[_rootHid], _indexLevels);
 
         internal IEnumerable<KeyValuePair<TKey, T>> GetAll()
         {
@@ -54,30 +48,25 @@ namespace Pst.Internal.Ltp
                 return Enumerable.Empty<KeyValuePair<TKey, T>>();
 
             var items = new List<KeyValuePair<TKey, T>>();
-            GetAllInternal(items, Heap[_rootHid], _indexLevels);
+            GetAllInternal(items, _heap[_rootHid], _indexLevels);
             return items;
         }
 
         private T FindInternal(TKey key, Segment<byte> heapItem, int level)
         {
             var keys = ReadKeys(heapItem, level == 0 ? ElementLength : IntermediateLength);
-            var keyIndex = Array.BinarySearch(keys, key);
+            var keyIndex = keys.BinarySearch(key);
 
             if (level == 0)
             {
-                if (keyIndex < 0)
-                    return default(T);
-
-                return _valueFactory(heapItem.Derive(keyIndex * ElementLength, ElementLength));
+                return keyIndex < 0 ? default : _valueFactory(heapItem.Slice(keyIndex * ElementLength, ElementLength));
             }
-            else
-            {
-                if (keyIndex < 0)
-                    keyIndex = ~keyIndex - 1;
 
-                var nextLevel = Heap[heapItem.Derive(keyIndex * IntermediateLength + _keyLength, 4).ToUInt32()];
-                return FindInternal(key, nextLevel, level - 1);
-            }
+            if (keyIndex < 0)
+                keyIndex = ~keyIndex - 1;
+
+            var nextLevel = _heap[heapItem.Slice(keyIndex * IntermediateLength + _keyLength, 4).ToUInt32()];
+            return FindInternal(key, nextLevel, level - 1);
         }
 
         private void GetAllInternal(List<KeyValuePair<TKey, T>> items, Segment<byte> heapItem, int level)
@@ -86,33 +75,33 @@ namespace Pst.Internal.Ltp
             var itemCount = heapItem.Count / recordLength;
             for (var i = 0; i < itemCount; i++)
             {
-                var key = _keyFactory(heapItem.Derive(i * recordLength, _keyLength));
+                var key = _keyFactory(heapItem.Slice(i * recordLength, _keyLength));
 
                 if (level == 0)
                 {
-                    var value = _valueFactory(heapItem.Derive(i * ElementLength, ElementLength));
+                    var value = _valueFactory(heapItem.Slice(i * ElementLength, ElementLength));
                     items.Add(new KeyValuePair<TKey, T>(key, value));
                 }
                 else
                 {
-                    var value = heapItem.Derive(i * IntermediateLength + _keyLength, 4);
-                    GetAllInternal(items, Heap[value.ToUInt32()], level - 1);
+                    var value = heapItem.Slice(i * IntermediateLength + _keyLength, 4);
+                    GetAllInternal(items, _heap[value.ToUInt32()], level - 1);
                 }
             }
         }
 
-        private TKey[] ReadKeys(Segment<byte> data, int recordLength)
+        private List<TKey> ReadKeys(Segment<byte> data, int recordLength)
         {
             var keyCount = data.Count / recordLength;
-            var keys = new TKey[keyCount];
+            var keys = new List<TKey>(keyCount);
             for (var i = 0; i < keyCount; i++)
-                keys[i] = _keyFactory(data.Derive(i * recordLength, _keyLength));
+                keys.Add(_keyFactory(data.Slice(i * recordLength, _keyLength)));
             return keys;
         }
 
         private void ProcessHeader()
         {
-            var header = Heap[_headerHid];
+            var header = _heap[_headerHid];
             Validate.Match(header[0], 0xb5, "Invalid type");
             _keyLength = header[1];
             _valueLength = header[2];

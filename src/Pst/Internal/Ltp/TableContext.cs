@@ -29,10 +29,7 @@ namespace Pst.Internal.Ltp
             get
             {
                 var rowCount = _rowIndex.GetAll().Count();
-                var rows = Enumerable.Range(0, rowCount).Select(i =>
-                {
-                    return new TcRow(i, _columnOffsets, _columnDefs, _rowData, _heap, _node);
-                });
+                var rows = Enumerable.Range(0, rowCount).Select(i => new TcRow(i, _columnOffsets, _columnDefs, _rowData, _heap, _node));
 
                 return rows.ToArray();
             }

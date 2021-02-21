@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Pst.Extensions;
 
 namespace Pst.Internal.Ndb
 {
@@ -113,7 +112,7 @@ namespace Pst.Internal.Ndb
                 }
                 else if (block.Data[0] == 0x01) // data tree
                 {
-                    TotalLength = block.Data.Segment(4, 4).ToUInt32();
+                    TotalLength = block.Data.Slice(4, 4).ToUInt32();
                     long offset = 0;
                     BuildDataTree(block, ref offset);
                 }
@@ -129,10 +128,10 @@ namespace Pst.Internal.Ndb
                 if (level != 0x01 && level != 0x02)
                     throw new Exception("Invalid level");
 
-                var numEntities = block.Data.Segment(2, 2).ToUInt16();
+                var numEntities = block.Data.Slice(2, 2).ToUInt16();
                 for (var i = 0; i < numEntities; i++)
                 {
-                    var bid = new Bid(block.Data.Segment(8 + i * 8, 8).ToUInt64());
+                    var bid = new Bid(block.Data.Slice(8 + i * 8, 8).ToUInt64());
                     if (level == 0x02)
                     {
                         var b = _reader.FindBlock(bid);

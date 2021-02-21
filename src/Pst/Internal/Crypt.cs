@@ -1,5 +1,3 @@
-using Pst.Extensions;
-
 namespace Pst.Internal
 {
     internal static class Crypt
@@ -108,8 +106,6 @@ namespace Pst.Internal
             0xed, 0x9a, 0x64, 0x3f, 0xc1, 0x6c, 0xf9, 0xec
         };
 
-        internal static void CryptPermute(byte[] data, bool encrypt) => CryptPermute(data.Segment(0, data.Length), encrypt);
-
         internal static void CryptPermute(Segment<byte> data, bool encrypt)
         {
             var tableOffset = encrypt ? R : I;
@@ -118,8 +114,6 @@ namespace Pst.Internal
                 data[i] = _cryptTable[tableOffset + data.Array[i]];
             }
         }
-
-        internal static void CryptCyclic(byte[] data, uint key) => CryptCyclic(data.Segment(), key);
 
         internal static void CryptCyclic(Segment<byte> data, uint key)
         {

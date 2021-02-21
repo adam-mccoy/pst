@@ -44,7 +44,7 @@ namespace Pst.Internal.Ltp
             if (!type.IsVariableLength() && type.GetLength() <= 8)
             {
                 var length = colDef.Tag.Type.GetLength();
-                data = _rowData.Derive(offset, length);
+                data = _rowData.Slice(offset, length);
             }
             else
             {
@@ -67,7 +67,7 @@ namespace Pst.Internal.Ltp
         private bool ColumnExists(int cebIndex)
         {
             var offset = _offsets.Ones + (_rowIndex * _offsets.Bm);
-            return (_rowData[offset + cebIndex / 8] & (1 << (7 - (cebIndex % 8)))) != 0;
+            return (_rowData[offset + cebIndex / 8] & (1 << (7 - cebIndex % 8))) != 0;
         }
     }
 }

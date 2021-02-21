@@ -16,8 +16,8 @@ namespace Pst.Internal.Ndb
             RefCount = data.ToUInt16(18);
         }
 
-        internal Bref Bref { get; private set; }
-        internal ushort Length { get; private set; }
-        internal ushort RefCount { get; private set; }
+        internal Bref Bref { get; }
+        internal ushort Length { get; }
+        internal ushort RefCount { get; }
     }
 }

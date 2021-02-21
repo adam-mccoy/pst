@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Pst.Extensions;
 
 namespace Pst.Internal.Ndb
 {
@@ -36,41 +35,38 @@ namespace Pst.Internal.Ndb
             while (_currentLevel > 0)
             {
                 var keys = ReadKeys();
-                var i = Array.BinarySearch(keys, key);
+                var i = keys.BinarySearch(key);
 
                 if (i < 0)
                     i = ~i - 1;
 
-                var offset = BitConverter.ToInt64(_buffer, i * _entrySize + 16);
+                var offset = _buffer.Slice(i * _entrySize + 16).ToInt64();
                 MoveTo(offset);
             }
 
             var leafKeys = ReadKeys();
-            var leafIndex = Array.BinarySearch(leafKeys, key);
-            if (leafIndex < 0)
-                return null;
-
-            return CreateNode(leafIndex);
+            var leafIndex = leafKeys.BinarySearch(key);
+            return leafIndex < 0 ? null : CreateNode(leafIndex);
         }
 
         private T CreateNode(int index)
         {
-            var segment = _buffer.Segment(index * _entrySize, _entrySize);
+            var segment = _buffer.Slice(index * _entrySize, _entrySize);
             var node = _factory(segment);
             return node;
         }
 
-        private ulong[] ReadKeys()
+        private List<ulong> ReadKeys()
         {
             var list = new List<ulong>(_entries);
             var offset = 0;
             for (var i = 0; i < _entries; i++)
             {
-                list.Add(BitConverter.ToUInt64(_buffer, offset));
+                list.Add(_buffer.Slice(offset).ToUInt64());
                 offset += _entrySize;
             }
 
-            return list.ToArray();
+            return list;
         }
 
         private void MoveTo(long offset)
@@ -84,9 +80,9 @@ namespace Pst.Internal.Ndb
             _currentLevel = _buffer[MetaDataOffset + 3];
 
             var type = (PageType)_buffer[TrailerOffset];
-            var sig = BitConverter.ToUInt16(_buffer, TrailerOffset + 2);
-            var crc = BitConverter.ToUInt32(_buffer, TrailerOffset + 4);
-            var bid = BitConverter.ToUInt64(_buffer, TrailerOffset + 8);
+            var sig = _buffer.Slice(TrailerOffset + 2).ToUInt16();
+            var crc = _buffer.Slice(TrailerOffset + 4).ToUInt32();
+            var bid = _buffer.Slice(TrailerOffset + 8).ToUInt64();
             _trailer = new PageTrailer(type, sig, crc, bid);
         }
     }

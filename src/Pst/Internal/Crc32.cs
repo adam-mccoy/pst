@@ -1,5 +1,3 @@
-using Pst.Extensions;
-
 namespace Pst.Internal
 {
     internal static class Crc32
@@ -39,7 +37,7 @@ namespace Pst.Internal
             0xbdbdf21c, 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf,
             0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
         };
-        private static readonly uint[] CrcTableOffset40 = 
+        private static readonly uint[] CrcTableOffset40 =
         {
             0x00000000, 0x191b3141, 0x32366282, 0x2b2d53c3, 0x646cc504, 0x7d77f445, 0x565aa786, 0x4f4196c7,
             0xc8d98a08, 0xd1c2bb49, 0xfaefe88a, 0xe3f4d9cb, 0xacb54f0c, 0xb5ae7e4d, 0x9e832d8e, 0x87981ccf,
@@ -285,7 +283,7 @@ namespace Pst.Internal
             0x2c8e0fff, 0xe0240f61, 0x6eab0882, 0xa201081c, 0xa8c40105, 0x646e019b, 0xeae10678, 0x264b06e6
         };
 
-        internal static uint Calculate(byte[] bytes) => Calculate(bytes.Segment(0, bytes.Length));
+        internal static uint Calculate(byte[] bytes) => Calculate(bytes.Slice(0, bytes.Length));
 
         internal static uint Calculate(Segment<byte> bytes)
         {

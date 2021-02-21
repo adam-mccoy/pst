@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using Pst.Extensions;
 using Pst.Internal.Ndb;
 
 namespace Pst.Internal
@@ -17,6 +16,7 @@ namespace Pst.Internal
         private const int UnicodeHeaderLength = 564;
         private const int AnsiHeaderLength = 512;
 
+        private readonly Stream _stream;
         private ushort _fileVersion;
         private CryptMethod _cryptMethod;
         private BTreeReader<BbtEntry> _bbtReader;
@@ -25,13 +25,11 @@ namespace Pst.Internal
         internal PstReader(Stream input)
         {
             ValidateStream(input);
-            Stream = input;
+            _stream = input;
             VerifyHeader();
         }
 
         public bool IsAnsi => _fileVersion == 14 || _fileVersion == 15;
-
-        internal Stream Stream { get; }
 
         public BbtEntry LookupBlock(Bid bid) => _bbtReader.Find(bid);
 
@@ -43,11 +41,11 @@ namespace Pst.Internal
 
             var blockSize = 64 * ((entry.Length + Block.TrailerLength + 63) / 64);
             var block = new byte[blockSize];
-            Stream.Seek((long)entry.Bref.Ib, SeekOrigin.Begin);
+            _stream.Seek((long)entry.Bref.Ib, SeekOrigin.Begin);
             ReadBytes(block, 0, blockSize);
 
             var result = Block.Create(block);
-            Validate.Match(result.Crc, Crc32.Calculate(result.Data.Segment(0, result.Length)), "Block CRC doesn't match.");
+            Validate.Match(result.Crc, Crc32.Calculate(result.Data.Slice(0, result.Length)), "Block CRC doesn't match.");
 
             if (_cryptMethod != CryptMethod.None && bid.Type == BlockType.External)
                 DecryptBlock(result.Data, result.Bid);
@@ -68,23 +66,23 @@ namespace Pst.Internal
         {
             var buffer = new byte[UnicodeHeaderLength];
             ReadBytes(buffer, 0, 28);
-            Validate.Match(buffer.Segment(0, 4), MagicBytes, "Magic value invalid.");
-            Validate.Match(buffer.Segment(8, 2), MagicClientBytes, "Magic client value invalid.");
+            Validate.Match(buffer.Slice(0, 4), MagicBytes, "Magic value invalid.");
+            Validate.Match(buffer.Slice(8, 2), MagicClientBytes, "Magic client value invalid.");
             _fileVersion = BitConverter.ToUInt16(buffer, 10);
             Validate.Any(_fileVersion, SupportedVersions, "Found unsupported version.");
             ReadBytes(buffer, 28, (IsAnsi ? AnsiHeaderLength : UnicodeHeaderLength) - 28);
             var crcPartial = BitConverter.ToUInt32(buffer, 4);
-            Validate.Match(crcPartial, Crc32.Calculate(buffer.Segment(8, 471)), "Partial CRC invalid.");
+            Validate.Match(crcPartial, Crc32.Calculate(buffer.Slice(8, 471)), "Partial CRC invalid.");
 
             var nbt = new Bref(
-                BitConverter.ToUInt64(buffer, RootOffset + 36),
-                BitConverter.ToUInt64(buffer, RootOffset + 44));
+                buffer.Slice(RootOffset + 36).ToUInt64(),
+                buffer.Slice(RootOffset + 44).ToUInt64());
             var bbt = new Bref(
-                BitConverter.ToUInt64(buffer, RootOffset + 52),
-                BitConverter.ToUInt64(buffer, RootOffset + 60));
+                buffer.Slice(RootOffset + 52).ToUInt64(),
+                buffer.Slice(RootOffset + 60).ToUInt64());
 
-            _nbtReader = new BTreeReader<NbtEntry>(Stream, (long)nbt.Ib, seg => new NbtEntry(seg));
-            _bbtReader = new BTreeReader<BbtEntry>(Stream, (long)bbt.Ib, seg => new BbtEntry(seg));
+            _nbtReader = new BTreeReader<NbtEntry>(_stream, (long)nbt.Ib, seg => new NbtEntry(seg));
+            _bbtReader = new BTreeReader<BbtEntry>(_stream, (long)bbt.Ib, seg => new BbtEntry(seg));
 
             _cryptMethod = (CryptMethod)buffer[CryptMethodOffset];
         }
@@ -107,10 +105,10 @@ namespace Pst.Internal
         {
             var bytesRead = 0;
             while (bytesRead < count)
-                bytesRead += Stream.Read(buffer, offset + bytesRead, count - bytesRead);
+                bytesRead += _stream.Read(buffer, offset + bytesRead, count - bytesRead);
         }
 
-        private void ValidateStream(Stream input)
+        private static void ValidateStream(Stream input)
         {
             if (input == null)
                 throw new ArgumentNullException(nameof(input));

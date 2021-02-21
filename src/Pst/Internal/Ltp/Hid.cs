@@ -8,7 +8,7 @@ namespace Pst.Internal.Ltp
     {
         internal static Hid Zero = new Hid(0);
 
-        private uint _value;
+        private readonly uint _value;
 
         public Hid(uint value)
         {

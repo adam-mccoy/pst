@@ -30,7 +30,7 @@ namespace Pst
                 if (_rootFolder == null)
                 {
                     var prop = _context.Get(PropertyKey.IpmSubTreeEntryId);
-                    Nid nid = prop.Value.Derive(20, 4);
+                    Nid nid = prop.Value.Slice(20, 4);
                     _rootFolder = new Folder(nid, _pstReader);
                 }
                 return _rootFolder;
